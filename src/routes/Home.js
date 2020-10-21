@@ -1,32 +1,34 @@
 import React, {useEffect, useState} from 'react';
 import {dbService} from "../myFirebase";
 
-function Home() {
+function Home({ user }) {
     const [value, setValue] = useState('');
     const [lang, setLang] = useState(true); // arabic
     const [added, setAdded] = useState(false);
     const [list, setList] = useState([]);
-
-    const getWords = async () => {
-        const words = await dbService.collection("words").get();
-        words.forEach(document => {
-            const wordObject = {
-                ...document.data(),
-                id: document.id
-            }
-            setList(prev => [wordObject, ...prev]);
-        });
-    }
+    const collectionPath = 'words';
 
     useEffect(() => {
-        getWords();
+        dbService.collection(collectionPath).onSnapshot(snapshot => {
+            const words = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setList(words);
+        });
     },[]);
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        const data = await dbService.collection('words').add({
+        const date = new Date().toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        const data = await dbService.collection(collectionPath).add({
+            user: user.uid,
             word: value,
-            date: Date.now()
+            date
         });
         if(data) setAdded(true);
     }
@@ -40,8 +42,6 @@ function Home() {
     }
     const onToggleSearch = () => {
     }
-
-    console.log(list);
     return (
         <div>
             <form action="" onSubmit={onSubmit}>
@@ -55,7 +55,11 @@ function Home() {
             </form>
             <div>
                 <ul>
-                    {list.map(word => <li key={word.id}>{word.word}</li>)}
+                    {list.map(word =>
+                        <li key={word.id}>
+                            {word.word}<span>{word.date}</span>
+                        </li>
+                    )}
                 </ul>
             </div>
         </div>

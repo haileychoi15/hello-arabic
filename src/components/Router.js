@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import Auth from 'routes/Auth';
 import Home from 'routes/Home';
 import List from 'routes/List';
 import Navigation from 'components/Navigation';
 
-function AppRouter ({ isLoggedIn }) {
+function AppRouter ({ login, user }) {
     return(
         <Router>
-            {isLoggedIn && <Navigation />}
+            {login && <Navigation />}
             <Switch>
-                {isLoggedIn
+                {login
                     ? (
                         <>
                             <Route exact path="/">
-                                <Home />
+                                <Home user={user} />
                             </Route>
                             <Route exact path="/wordlist">
                                 <List />
