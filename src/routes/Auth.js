@@ -15,11 +15,10 @@ function Auth() {
     const onSubmit = async (e) => {
         e.preventDefault();
         try {
-            let data;
             if (newAccount) {
-                data = await authService.createUserWithEmailAndPassword(email, password);
+                await authService.createUserWithEmailAndPassword(email, password);
             } else {
-                data = await authService.signInWithEmailAndPassword(email, password);
+                await authService.signInWithEmailAndPassword(email, password);
             }
         } catch (error) {
             setError(error.message);
@@ -28,10 +27,10 @@ function Auth() {
 
     const toggleAccount = () => setNewAccount(prev => !prev);
 
-    const onSocialClick = async (e) => {
+    const onSocialClick = async () => {
         const provider = new firebaseInstance.auth.GoogleAuthProvider();
-        const data = await authService.signInWithPopup(provider);
-        console.log(data.additionalUserInfo.profile.email);
+        await authService.signInWithPopup(provider);
+        //console.log(data.additionalUserInfo.profile.email);
     }
 
 
