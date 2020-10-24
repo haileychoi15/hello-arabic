@@ -11,7 +11,7 @@ function Home({ user }) {
 
     useEffect(() => {
         let fetching = true;
-        dbService.collection(collectionPath).onSnapshot(snapshot => {
+        dbService.collection(collectionPath).orderBy('date', 'desc').onSnapshot(snapshot => {
             const wordData = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
@@ -23,11 +23,7 @@ function Home({ user }) {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        const date = new Date().toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
+        const date = new Date();
         const data = await dbService.collection(collectionPath).add({
             creator: user.uid,
             word: value,
@@ -68,7 +64,13 @@ function Home({ user }) {
             </form>
             <div>
                 <ul>
-                    {words.filter(word => word.creator === user.uid).map(word => <Word key={word.id} word={word} collectionPath={collectionPath} /> )}
+                    {words
+                        .filter(word => word.creator === user.uid)
+                        .map(word => <Word
+                            key={word.id}
+                            word={word}
+                            collectionPath={collectionPath}
+                        /> )}
                 </ul>
             </div>
         </div>
