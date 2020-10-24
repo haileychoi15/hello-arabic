@@ -1,27 +1,12 @@
-import React, {useContext, useEffect, useState} from 'react';
-import Word from 'components/Word';
+import React, {useContext, useState} from 'react';
 import {dbService} from "../myFirebase";
 import {UserContext} from "../Context";
 
-function Home() {
+function Home({ collectionPath }) {
     const userObj = useContext(UserContext)[0];
     const [value, setValue] = useState('');
     const [lang, setLang] = useState(true); // arabic
     const [added, setAdded] = useState(false);
-    const [words, setWords] = useState([]);
-    const collectionPath = 'words';
-
-    useEffect(() => {
-        let fetching = true;
-        dbService.collection(collectionPath).orderBy('date', 'desc').onSnapshot(snapshot => {
-            const wordData = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-            if (fetching) setWords(wordData);
-        });
-        return () => {fetching = false};
-    },[]);
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -64,17 +49,6 @@ function Home() {
                 </button>
                 <input type="submit" value="단어장 추가" />
             </form>
-            <div>
-                <ul>
-                    {words
-                        .filter(word => word.creator === userObj.uid)
-                        .map(word => <Word
-                            key={word.id}
-                            word={word}
-                            collectionPath={collectionPath}
-                        /> )}
-                </ul>
-            </div>
         </div>
     );
 }

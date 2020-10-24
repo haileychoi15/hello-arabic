@@ -17,7 +17,6 @@ function App() {
     return (
         <UserContext.Provider value={[userObj, setUserObj]}>
             {init  ? <AppRouter login={Boolean(userObj)} /> : 'Initializing...'}
-            <footer>&copy hello-arabic {new Date().getFullYear()}</footer>
         </UserContext.Provider>
     );
 }

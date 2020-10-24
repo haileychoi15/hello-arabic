@@ -9,16 +9,17 @@ const Navigation = () => {
     const onLogOutClick = () => {
         authService.signOut();
         setUserObj(null);
-        history.push('/');
+        const homeURL = '/';
+        if (history.location.pathname !== homeURL) history.push(homeURL);
     }
     return (
         <nav>
             <ul>
                 <li>
-                    <Link to="/">Home</Link>
+                    <Link to="/">단어찾기</Link>
                 </li>
                 <li>
-                    <Link to="/wordlist">Word List</Link>
+                    <Link to="/wordlist">단어장</Link>
                 </li>
             </ul>
             <button onClick={onLogOutClick}>로그아웃</button>

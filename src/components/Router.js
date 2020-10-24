@@ -6,6 +6,7 @@ import List from 'routes/List';
 import Navigation from 'components/Navigation';
 
 function AppRouter ({ login }) {
+    const collectionPath = 'words';
     const CustomRoute = (props) => {
         if (login) return <Route {...props} />
         return <Route exact path="/" render={() => <Auth />} />
@@ -14,8 +15,8 @@ function AppRouter ({ login }) {
         <Router>
             {login && <Navigation />}
             <Switch>
-                <CustomRoute exact path="/" render={() => <Home />} />
-                <CustomRoute exact path="/wordlist" render={() => <List />} />
+                <CustomRoute exact path="/" render={() => <Home collectionPath={collectionPath} />} />
+                <CustomRoute exact path="/wordlist" render={() => <List collectionPath={collectionPath} />} />
             </Switch>
         </Router>
     )
