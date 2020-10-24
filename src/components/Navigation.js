@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { authService } from 'myFirebase';
 import { Link, useHistory } from 'react-router-dom';
+import {UserContext} from "../Context";
 
 const Navigation = () => {
     const history = useHistory();
+    const setUserObj = useContext(UserContext)[1];
     const onLogOutClick = () => {
         authService.signOut();
+        setUserObj(null);
         history.push('/');
     }
     return (

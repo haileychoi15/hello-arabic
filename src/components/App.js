@@ -1,28 +1,24 @@
 import React, {useEffect, useState} from 'react';
 import AppRouter from 'components/Router';
 import { authService } from 'myFirebase';
+import { UserContext } from 'Context';
 
 function App() {
     const [init, setInit] = useState(false);
-    const [login, setLogin] = useState(false);
-    const [user, setUser] = useState(null);
+    const [userObj, setUserObj] = useState(null);
     useEffect(() => {
         authService.onAuthStateChanged((user) => {
             if (user) {
-                setLogin(true);
-                setUser(user);
-            }
-            else {
-                setLogin(false);
+                setUserObj(user);
             }
             setInit(true);
         });
     }, []);
     return (
-        <>
-            {init  ? <AppRouter login={login} user={user}  /> : 'Initializing...'}
+        <UserContext.Provider value={[userObj, setUserObj]}>
+            {init  ? <AppRouter login={Boolean(userObj)} /> : 'Initializing...'}
             <footer>&copy hello-arabic {new Date().getFullYear()}</footer>
-        </>
+        </UserContext.Provider>
     );
 }
 

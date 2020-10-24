@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Word from 'components/Word';
 import {dbService} from "../myFirebase";
+import {UserContext} from "../Context";
 
-function Home({ user }) {
+function Home() {
+    const userObj = useContext(UserContext)[0];
     const [value, setValue] = useState('');
     const [lang, setLang] = useState(true); // arabic
     const [added, setAdded] = useState(false);
@@ -25,7 +27,7 @@ function Home({ user }) {
         e.preventDefault();
         const date = new Date();
         const data = await dbService.collection(collectionPath).add({
-            creator: user.uid,
+            creator: userObj.uid,
             word: value,
             date
         });
@@ -65,7 +67,7 @@ function Home({ user }) {
             <div>
                 <ul>
                     {words
-                        .filter(word => word.creator === user.uid)
+                        .filter(word => word.creator === userObj.uid)
                         .map(word => <Word
                             key={word.id}
                             word={word}
