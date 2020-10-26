@@ -16,10 +16,13 @@ const Navigation = () => {
         <nav>
             <ul>
                 <li>
-                    <Link to="/">단어찾기</Link>
+                    <Link to="/">단어</Link>
                 </li>
                 <li>
                     <Link to="/wordlist">단어장</Link>
+                </li>
+                <li>
+                    <Link to="/translate">번역</Link>
                 </li>
             </ul>
             <button onClick={onLogOutClick}>로그아웃</button>
