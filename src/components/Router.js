@@ -4,7 +4,7 @@ import Auth from 'routes/Auth';
 import Home from 'routes/Home';
 import List from 'routes/List';
 import Navigation from 'components/Navigation';
-import Translate from "../routes/Translate";
+import Translate from 'routes/Translate';
 
 function AppRouter ({ login }) {
     const collectionPath = 'words';
@@ -14,12 +14,12 @@ function AppRouter ({ login }) {
     }
     return(
         <Router>
-            {login && <Navigation />}
             <Switch>
                 <CustomRoute exact path="/" render={() => <Home collectionPath={collectionPath} />} />
                 <CustomRoute exact path="/wordlist" render={() => <List collectionPath={collectionPath} />} />
                 <CustomRoute exact path="/translate" render={() => <Translate />} />
             </Switch>
+            {login && <Navigation />}
         </Router>
     )
 }
