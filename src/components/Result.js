@@ -1,13 +1,11 @@
 import React from 'react';
 
 function Result( { results }) {
-
     const decodeHtml = (html) => {
         const element = document.createElement('textarea');
         element.innerHTML = html;
         return element.value;
     }
-
     return (
         <div>
             {results.map((result, index) => (

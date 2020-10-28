@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
-import Word from "../components/Word";
-import {UserContext} from "../Context";
-import {dbService} from "../myFirebase";
+import Word from 'components/Word';
+import {UserContext} from 'Context';
+import {dbService} from 'myFirebase';
 
 function List({ collectionPath }) {
     const userObj = useContext(UserContext)[0];

@@ -1,29 +1,11 @@
 import React, {useState} from 'react';
-import axios from 'axios';
+import {googleTranslate} from 'services/API';
 
 function Translate() {
     const [value, setValue] = useState('');
     const [results, setResults] = useState('');
     const [sourceLang, setSourceLang] = useState('ar');
     const [targetLang, setTargetLang] = useState('en');
-
-    const googleTranslate = async () => {
-        const appKey = '241c526f87mshf4e9baee728bb10p1d98f4jsndd2aa29b9744';
-        const http = axios.create({
-            baseURL: 'https://google-translate20.p.rapidapi.com',
-            headers : {
-                'x-rapidapi-host': 'google-translate20.p.rapidapi.com',
-                'x-rapidapi-key': appKey
-            }
-        });
-        const request = {
-            text: 'مَاذَا أَعْجَبكُمْ فِي بَلَدِنَا؟',
-            sourceLang,
-            targetLang
-        }
-        const {data : { data : { translation } }} = await http.get(`/translate?text=${request.text}&sl=${request.sourceLang}&&tl=${request.targetLang}`);
-        setResults(translation);
-    }
 
     const onInputChange = (e) => {
         const { value } = e.target;
@@ -46,14 +28,16 @@ function Translate() {
         }
     }
 
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
-        //googleTranslate();
+        const text = 'مَاذَا أَعْجَبكُمْ فِي بَلَدِنَا؟';
+        //const result = await googleTranslate(text, sourceLang, targetLang);
+        //setResults(result);
     }
     return (
         <div>
             <form action="" onSubmit={onSubmit}>
-                <select name="source-langs" id="source-context" value={sourceLang} onChange={onLangChange}>
+                <select name="source-langs" value={sourceLang} onChange={onLangChange}>
                     <option value="ar">아랍어</option>
                     <option value="en">영어</option>
                     <option value="ko">한국어</option>
@@ -62,12 +46,12 @@ function Translate() {
 
                 <button onClick={onLangSwitch}>언어 스위치</button>
 
-                <select name="target-langs" id="source-context" value={targetLang} onChange={onLangChange}>
+                <select name="target-langs" value={targetLang} onChange={onLangChange}>
                     <option value="ar">아랍어</option>
                     <option value="en">영어</option>
                     <option value="ko">한국어</option>
                 </select>
-                <textarea id="target-context" rows="10" cols="30" placeholder="번역된 결과를 얻는데 2초가 소요됩니다." value={results} readOnly />
+                <textarea id="target-context" rows="10" cols="30" placeholder="번역 결과입니다." value={results} readOnly />
                 <input type="submit" value="번역하기" />
             </form>
         </div>

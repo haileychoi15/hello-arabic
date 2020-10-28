@@ -1,8 +1,8 @@
 import React, {useContext, useState} from 'react';
-import {dbService} from "../myFirebase";
-import axios from 'axios';
-import {UserContext} from "../Context";
-import Result from "../components/Result";
+import {dbService} from "myFirebase";
+import {UserContext} from "Context";
+import Result from "components/Result";
+import {getWordResult} from "services/API";
 
 function Home({ collectionPath }) {
     const userObj = useContext(UserContext)[0];
@@ -30,9 +30,7 @@ function Home({ collectionPath }) {
     }
     const onSubmit = async (e) => {
         e.preventDefault();
-        let proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-        let targetUrl = `${process.env.REACT_APP_WORD_RESULT_API}{"word": "زَهْرَة", "dictionary": "AR-EN-WORD-DICTIONARY"}&format=json`;
-        const { data : { result } } = await axios.get(proxyUrl + targetUrl);
+        const result = await getWordResult("زَهْرَة");
         setResults(result);
     }
     return (
