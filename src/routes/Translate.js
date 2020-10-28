@@ -2,24 +2,10 @@ import React, {useState} from 'react';
 import axios from 'axios';
 
 function Translate() {
+    const [value, setValue] = useState('');
     const [results, setResults] = useState('');
-
-    const kakaoTranslate = async () => {
-        const appKey = '6aa6692a52d725027c5e744e1bdf862a';
-        const http = axios.create({
-            baseURL: 'https://dapi.kakao.com',
-            headers: {
-                Authorization: `KakaoAK ${appKey}`
-            }
-        });
-        const request = {
-            text: "سَافرت إلى نيويورك لِحضُور الاجتماعَ",
-            sourceLang: 'ar',
-            targetLang: 'kr'
-        };
-        const {data : { translated_text }} = await http.get(`/v2/translation/translate?query=${request.text}&src_lang=${request.sourceLang}&target_lang=${request.targetLang}`);
-        setResults(translated_text.join(', '));
-    }
+    const [sourceLang, setSourceLang] = useState('ar');
+    const [targetLang, setTargetLang] = useState('en');
 
     const googleTranslate = async () => {
         const appKey = '241c526f87mshf4e9baee728bb10p1d98f4jsndd2aa29b9744';
@@ -32,28 +18,56 @@ function Translate() {
         });
         const request = {
             text: 'مَاذَا أَعْجَبكُمْ فِي بَلَدِنَا؟',
-            sourceLang: 'ar',
-            targetLang: 'ko'
+            sourceLang,
+            targetLang
         }
         const {data : { data : { translation } }} = await http.get(`/translate?text=${request.text}&sl=${request.sourceLang}&&tl=${request.targetLang}`);
         setResults(translation);
     }
 
-    const [value, setValue] = useState('');
-    const onChange = (e) => {
+    const onInputChange = (e) => {
         const { value } = e.target;
         setValue(value);
     }
+
+    const onLangSwitch = () => {
+        const tempLang = sourceLang;
+        setSourceLang(targetLang);
+        setTargetLang(tempLang);
+    }
+
+    const onLangChange = (e) => {
+        const { name, value } = e.target;
+        if (name === 'source-langs') {
+            setSourceLang(value);
+        }
+        else if (name === 'target-langs') {
+            setTargetLang(value);
+        }
+    }
+
     const onSubmit = (e) => {
         e.preventDefault();
-        //kakaoTranslate();
-        googleTranslate();
+        //googleTranslate();
     }
     return (
         <div>
             <form action="" onSubmit={onSubmit}>
-                <textarea rows="10" cols="30" placeholder="내용을 입력해주세요." value={value} onChange={onChange}/>
-                <textarea rows="10" cols="30" placeholder="번역된 내용입니다." value={results} readOnly />
+                <select name="source-langs" id="source-context" value={sourceLang} onChange={onLangChange}>
+                    <option value="ar">아랍어</option>
+                    <option value="en">영어</option>
+                    <option value="ko">한국어</option>
+                </select>
+                <textarea id="source-context" rows="10" cols="30" placeholder="내용을 입력해주세요." value={value} onChange={onInputChange}/>
+
+                <button onClick={onLangSwitch}>언어 스위치</button>
+
+                <select name="target-langs" id="source-context" value={targetLang} onChange={onLangChange}>
+                    <option value="ar">아랍어</option>
+                    <option value="en">영어</option>
+                    <option value="ko">한국어</option>
+                </select>
+                <textarea id="target-context" rows="10" cols="30" placeholder="번역된 결과를 얻는데 2초가 소요됩니다." value={results} readOnly />
                 <input type="submit" value="번역하기" />
             </form>
         </div>
