@@ -1,11 +1,9 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import { authService } from 'myFirebase';
 import { Link, useHistory } from 'react-router-dom';
-import {UserContext} from "../Context";
+import {UserContext} from 'Context';
+import NavItem from 'components/NavItem';
 import styled from 'styled-components';
-import {IoIosSearch, IoIosLogOut} from 'react-icons/io';
-import {MdGTranslate} from 'react-icons/md';
-import {IconContext} from 'react-icons';
 
 
 const Nav = styled.nav`
@@ -26,31 +24,49 @@ const Ul = styled.ul`
   justify-content: space-around;
   align-items: center;
   width: 100%;
-`;
-
-const NavItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #333;
-`;
-
-const Icon = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 1.7rem;
-  height: 1.7rem;
-`;
-
-const Text = styled.div`
-  margin-top: 5px;
-  font-size: 0.5rem;
+  & li.active div{
+    color: cornflowerblue;
+  }
 `;
 
 const Navigation = () => {
+    const data = [{
+        id: 1,
+        text: '단어검색',
+        href: '/',
+        active: true,
+        link: true,
+        size: '1.7rem'
+    },
+    {
+        id: 2,
+        text: '구글번역',
+        href: '/translate',
+        active: false,
+        link: true,
+        size: '1.7rem',
+    },
+    {
+        id: 3,
+        text: '보관함',
+        href: '/wordlist',
+        active: false,
+        link: true,
+        size: '1.5rem',
+    },
+    {
+        id: 4,
+        text: '로그아웃',
+        href: '/',
+        active: false,
+        link: false,
+        size: '1.7rem',
+    }];
+    const [list, setList] = useState(data);
+
     const history = useHistory();
     const setUserObj = useContext(UserContext)[1];
+
     const onLogOutClick = () => {
         authService.signOut();
         setUserObj(null);
@@ -58,76 +74,27 @@ const Navigation = () => {
         if (history.location.pathname !== homeURL) history.push(homeURL);
     }
 
-    const onLinkClick = (index) => {
-        setList(list.map((item, i) => {
-            item.active = false;
-            if (i === index)
-                item.active = !item.active;
-        }));
+    const onLinkClick = (id) => {
+        setList(list.map((item, index) =>  (id === item.id)
+            ? {...item, active: true}
+            : {...item, active: false}));
     }
-    }
-
-    // state
-    const list = [{
-        name: '단어검색',
-        href: '',
-        active: false,
-        link: true
-    }];
 
     return (
         <Nav>
             <Ul>
-                (item, index)
-                <li onClick={onLinkClick} className={active ? '' : ''}>
-                    {link ? <Link to="/"> : <button></button>}
-                    <Link to="/">
-                        <NavItem>
-                            <Icon>
-                                <IconContext.Provider value={{ size: "1.7rem" }}>
-                                    <IoIosSearch />
-                                </IconContext.Provider>
-                            </Icon>
-                            <Text>단어검색</Text>
-                        </NavItem>
-                    </Link>
-                </li>
-                <li onClick={onLinkClick}>
-                    <Link to="/translate">
-                        <NavItem>
-                            <Icon>
-                                <IconContext.Provider value={{ size: "1.7rem" }}>
-                                    <MdGTranslate />
-                                </IconContext.Provider>
-                            </Icon>
-                            <Text>구글번역</Text>
-                        </NavItem>
-                    </Link>
-                </li>
-                <li onClick={onLinkClick}>
-                    <Link to="/wordlist">
-                        <NavItem>
-                            <Icon>
-                                <IconContext.Provider value={{ size: "1.5rem" }}>
-                                    <BsFolderCheck />
-                                </IconContext.Provider>
-                            </Icon>
-                            <Text>보관함</Text>
-                        </NavItem>
-                    </Link>
-                </li>
-                <li onClick={onLinkClick}>
-                    <button onClick={onLogOutClick}>
-                        <NavItem>
-                            <Icon>
-                                <IconContext.Provider value={{ size: "1.7rem" }}>
-                                    <IoIosLogOut />
-                                </IconContext.Provider>
-                            </Icon>
-                            <Text>로그아웃</Text>
-                        </NavItem>
-                    </button>
-                </li>
+                {list.map((item) => (
+                    <li key={item.id} onClick={() => onLinkClick(item.id)} className={item.active ? 'active' : ''}>
+                        {item.link
+                            ? <Link to={item.href}>
+                                  <NavItem id={item.id} size={item.size} text={item.text} />
+                              </Link>
+                            : <button>
+                                  <NavItem id={item.id} size={item.size} text={item.text} />
+                              </button>
+                        }
+                    </li>
+                ))}
             </Ul>
         </Nav>
     )
