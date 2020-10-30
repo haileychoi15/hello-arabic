@@ -1,10 +1,8 @@
-import React, {useContext, useState} from 'react';
-import {dbService} from "myFirebase";
-import {UserContext} from "Context";
+import React, {useState} from 'react';
 import Result from "components/Result";
 import {getWordResult} from "services/API";
 import styled from 'styled-components';
-import {AiFillCloseCircle, AiFillPlusCircle} from 'react-icons/ai';
+import {AiFillCloseCircle} from 'react-icons/ai';
 
 const HomeContainer = styled.div`
     width: 100%;
@@ -54,62 +52,15 @@ const ResetButton = styled.button`
   transform: translateY(-50%);
 `;
 
-const SearchButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 40px;
-  border: 2px solid #333;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  color: #333;
-`;
-
-const ResultBlock = styled.div`
-  
-`;
-
-const AddButtonBlock = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  color: #d2d2d2;
-  font-size: 0.8rem;
-`;
-
-const AddButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-left: 0.5rem;
-  font-size: 1.6rem;
-  color: #d2d2d2;
-`;
-
 function Home({ collectionPath }) {
-    const userObj = useContext(UserContext)[0];
     const [inputValue, setInputValue] = useState('');
-    const [submitValue, setSubmitValue] = useState(inputValue);
     const [lang, setLang] = useState(true); // arabic
-    const [added, setAdded] = useState(false);
     const [results, setResults] = useState(null);
     const [message, setMessage] = useState('');
-
-    const onToggleAdd = async () => {
-        const date = new Date();
-        const data = await dbService.collection(collectionPath).add({
-            creator: userObj.uid,
-            word: submitValue,
-            date
-        });
-        if(data) setAdded(true);
-    }
 
     const onChange = (e) => {
         const { value } = e.target;
         setInputValue(value);
-        setAdded(false);
     }
 
     const onToggleLang = () => {
@@ -119,14 +70,13 @@ function Home({ collectionPath }) {
     const onSubmit = async (e) => {
         e.preventDefault();
         setResults(null);
-        setSubmitValue(inputValue);
 
         const hasVal = inputValue.length;
         setMessage( hasVal ? '결과를 가져오는 중...' : '단어를 입력해주세요.');
         if (!hasVal) return false;
 
         const test = 'زَهْرَة';
-        const result = await getWordResult("تمشى");
+        const result = await getWordResult("زَهْرَة");
         result.length ? setResults(result) : setMessage('검색결과가 없습니다.');
     }
     return (
@@ -153,23 +103,10 @@ function Home({ collectionPath }) {
             </Form>
             <div>
                <div>
-                   {results ? <Result results={results} />
+                   {results ? <Result results={results} collectionPath={collectionPath} />
                        : <span>{message}</span>
                    }
                </div>
-            </div>
-            <div>
-                {results &&
-                <AddButtonBlock>
-                    <span>보관함에 추가</span>
-                    <AddButton onClick={onToggleAdd}>
-                        <AiFillPlusCircle />
-                    </AddButton>
-                </AddButtonBlock>
-                }
-                {added &&
-                <span>단어장에 추가되었습니다.</span>
-                }
             </div>
         </HomeContainer>
     );

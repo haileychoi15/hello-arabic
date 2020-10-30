@@ -16,8 +16,10 @@ const BodyContainer = styled.div`
 
 const Container = styled.div`
   position: relative;
-  width: 375px;
-  height: 667px;
+  width: 100vw;
+  height: 100vh;
+  max-width: 375px;
+  max-height: 667px;
   background-color: #fff;
 `;
 
