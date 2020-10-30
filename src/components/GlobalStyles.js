@@ -3,7 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 const GlobalStyles = createGlobalStyle`
 
 body {
-    font-family: 'Fira Sans Condensed', sans-serif;    
+    font-family: 'Nanum Gothic', sans-serif; 
     color: #333333;
     background-color: #fff;
     padding: 0;
@@ -33,7 +33,7 @@ body {
     color: #333;
   }
   
-  button {
+  button, input {
     padding: 0;
     border: none;
     cursor: pointer;

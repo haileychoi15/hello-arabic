@@ -29,7 +29,7 @@ function NavItem({ id, size, text }) {
     return (
         <ItemContainer>
             <Icon>
-                <IconContext.Provider value={{size: size}}>
+                <IconContext.Provider value={{size}}>
                     {id === 1 && <IoIosSearch />}
                     {id === 2 && <MdGTranslate />}
                     {id === 3 && <BsFolderCheck />}
