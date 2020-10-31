@@ -33,7 +33,7 @@ body {
     color: #fff;
   }
   
-  button, input {
+  button, input, textarea, select, option {
     padding: 0;
     border: none;
     cursor: pointer;

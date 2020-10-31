@@ -27,7 +27,7 @@ const Ul = styled.ul`
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 1rem;
+    margin: 1rem 0 2rem;
 `;
 
 const Li = styled.li`
@@ -63,9 +63,9 @@ const InputContainer = styled.div`
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 40px;
+    height: 45px;
     border: 1px solid #848484;
-    border-radius: 20px;
+    border-radius: 22px;
     padding: 0.3rem 0.7rem;
     margin-bottom: 1rem;
 `;
@@ -183,9 +183,11 @@ function Home({ collectionPath }) {
                         maxLength={30}
                         value={inputValue}
                         onChange={onChange} />
-                    <ResetButton type="button" onClick={() => setInputValue('')}>
-                        <AiOutlineCloseCircle />
-                    </ResetButton>
+                    {Boolean(inputValue.length) &&
+                        <ResetButton type="button" onClick={() => setInputValue('')}>
+                            <AiOutlineCloseCircle />
+                        </ResetButton>
+                    }
                 </InputContainer>
                 {/*<SearchButton type="submit">
                     검색

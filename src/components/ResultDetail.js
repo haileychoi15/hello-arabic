@@ -55,6 +55,7 @@ const SubResultBlock = styled.div`
 function ResultDetail ({ result, collectionPath }) {
     const [open, setOpen] = useState(false);
     const [add, setAdd] = useState(false);
+    const [dataId, setDataId] = useState('');
     const userObj = useContext(UserContext)[0];
 
     const decodeHtml = (html) => {
@@ -63,11 +64,9 @@ function ResultDetail ({ result, collectionPath }) {
         return element.value;
     }
 
-    console.log('result.id : ',result.id);
-
     const saveResult = async () => {
         const date = new Date();
-        await dbService.collection(collectionPath).add({
+        const {id} = await dbService.collection(collectionPath).add({
             creator: userObj.uid,
             vocForm: result.solution.vocForm,
             niceGloss: result.solution.niceGloss,
@@ -75,17 +74,15 @@ function ResultDetail ({ result, collectionPath }) {
             root: result.solution.root,
             date
         });
+        if (id) setDataId(id);
     }
 
     const deleteResult = async () => {
-        await dbService.doc(`${collectionPath}/${result.id}`).delete();
+        await dbService.doc(`${collectionPath}/${dataId}`).delete();
     }
 
     const onAddClick = () => {
-
-        if (add) deleteResult();
-        else saveResult();
-
+        add ? deleteResult() : saveResult();
         setAdd(prev => !prev);
     }
     return (

@@ -17,8 +17,11 @@ const AppContainer = styled.div`
 const NavContainer = styled.div`
   width: 100%;
   height: 12%;
-  padding: 1rem;
+  padding: 0 1rem;
   background-color: #202020;
+  @media screen and (min-width: 375px) {
+    padding: 1rem;
+  }
 `;
 
 function AppRouter ({ login }) {

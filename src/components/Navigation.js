@@ -5,10 +5,6 @@ import {UserContext} from 'Context';
 import NavItem from 'components/NavItem';
 import styled from 'styled-components';
 
-const NavContainer = styled.div`
-  background-color: #202020;
-`;
-
 const Nav = styled.nav`
   display: flex;
   justify-content: center;
@@ -86,7 +82,7 @@ const Navigation = () => {
     }
 
     return (
-        <NavContainer>
+        <div>
             <Nav>
                 <Ul>
                     {list.map((item) => (
@@ -103,7 +99,7 @@ const Navigation = () => {
                     ))}
                 </Ul>
             </Nav>
-        </NavContainer>
+        </div>
     )
 }
 

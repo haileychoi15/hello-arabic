@@ -29,14 +29,13 @@ const SelectBlock = styled.div`
   height: 40px;
   border: 1px solid #ffed97;
   border-radius: 20px;
-  color: #ffed97;
-  background-color: #202020;
+  background-color: #ffed97;
 `;
 
 const Select = styled.select`
   width: 60px;
   border: none;
-  color: #ffed97;
+  color: #333;
   background: none;
 `;
 
@@ -46,7 +45,7 @@ const SwitchButton = styled.button`
   align-items: center;
   margin: 0 1rem;
   font-size: 1.5rem;
-  color: #848484;
+  color: #ffed97;
 `;
 
 const TextareaBlock = styled.div`
@@ -88,8 +87,9 @@ const SearchButton = styled.button`
 `;
 
 const AddButtonBlock = styled.div`
+  position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   font-size: 0.8rem;
   color: #eee;
@@ -107,11 +107,20 @@ const AddButton = styled.button`
   color: #ffed97;
 `;
 
-function Translate({ collectionPath }) {
-    const userObj = useContext(UserContext);
+const Message = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+function Translate() {
+    const collectionPath = 'translations';
+    const userObj = useContext(UserContext)[0];
     const [value, setValue] = useState('');
-    const [results, setResults] = useState('ddd');
+    const [results, setResults] = useState('test');
     const [add, setAdd] = useState(false);
+    const [dataId, setDataId] = useState('');
     const [sourceLang, setSourceLang] = useState('ar');
     const [targetLang, setTargetLang] = useState('en');
     const [message, setMessage] = useState('');
@@ -119,6 +128,7 @@ function Translate({ collectionPath }) {
     const onInputChange = (e) => {
         const { value } = e.target;
         setValue(value);
+        setMessage('');
     }
 
     const onLangSwitch = () => {
@@ -139,15 +149,16 @@ function Translate({ collectionPath }) {
 
     const onSubmit = async (e) => {
         e.preventDefault();
+        setAdd(false);
+        setResults('');
         const text = 'مَاذَا أَعْجَبكُمْ فِي بَلَدِنَا؟';
         //const result = await googleTranslate(text, sourceLang, targetLang);
         //setResults(result);
     }
 
     const saveResult = async () => {
-        setMessage('');
         const date = new Date();
-        const data = await dbService.collection('translations').add({
+        const { id } = await dbService.collection(collectionPath).add({
             creator: userObj.uid,
             sourceLang,
             targetLang,
@@ -155,11 +166,11 @@ function Translate({ collectionPath }) {
             targetValue: results,
             date
         });
-        console.log('data : ',data);
+        setDataId(id);
     }
 
     const deleteResult = async () => {
-        //await dbService.doc(`${collectionPath}/${id}`).delete();
+        await dbService.doc(`${collectionPath}/${dataId}`).delete();
     }
 
     const onAddClick = () => {
@@ -173,8 +184,7 @@ function Translate({ collectionPath }) {
             return false;
         }
 
-        if (add) deleteResult();
-        else saveResult();
+        add ? deleteResult() : saveResult();
         setAdd(prev => !prev);
     }
     return (
@@ -208,7 +218,7 @@ function Translate({ collectionPath }) {
                 </TextareaBlock>
             </Form>
             <AddButtonBlock>
-                <span>{message}</span>
+                <Message>{message}</Message>
                 <AddButton type="button" onClick={onAddClick}>
                     {add ? <MdBookmark /> : <MdBookmarkBorder />}
                 </AddButton>
