@@ -6,9 +6,6 @@ import NavItem from 'components/NavItem';
 import styled from 'styled-components';
 
 const NavContainer = styled.div`
-  width: 100%;
-  height: 12%;
-  padding: 0 1rem 1rem;
   background-color: #202020;
 `;
 

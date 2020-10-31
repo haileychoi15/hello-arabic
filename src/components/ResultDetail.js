@@ -1,12 +1,12 @@
 import React, {useContext, useState} from 'react';
 import {dbService} from "myFirebase";
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import {MdBookmarkBorder, MdBookmark} from 'react-icons/md';
-import {UserContext} from "../Context";
+import {UserContext} from 'Context';
 
 const Li = styled.li`
   border: 1px solid #404040;
-  border-radius: 16px;
+  border-radius: 0.5rem;
   padding: 0.5rem;
   margin-bottom: 0.8rem;
   background-color: #303030;
@@ -14,6 +14,7 @@ const Li = styled.li`
 
 const MainResultBlock = styled.div`
   position: relative;
+  color: #eee;
 `;
 
 const Dl = styled.dl`
@@ -24,8 +25,7 @@ const Dt = styled.dt`
   //font-family: 'Tajawal', sans-serif;
   display: inline-block;
   margin-right: 0.5rem;
-  font-size: 1rem;
-  font-weight: 400;
+  font-size: 1.1rem;
 `;
 
 const Dd = styled.dd`
@@ -62,6 +62,8 @@ function ResultDetail ({ result, collectionPath }) {
         element.innerHTML = html;
         return element.value;
     }
+
+    console.log('result.id : ',result.id);
 
     const saveResult = async () => {
         const date = new Date();

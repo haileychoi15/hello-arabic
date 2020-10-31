@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Result from "components/Result";
 import {getWordResult} from "services/API";
 import styled, {css} from 'styled-components';
-import {AiFillCloseCircle} from 'react-icons/ai';
+import {AiOutlineCloseCircle} from 'react-icons/ai';
 
 const borderStyles = css`
     ${prop => (prop.position === 'right')
@@ -16,10 +16,11 @@ const borderStyles = css`
 `;
 
 const HomeContainer = styled.div`
-    width: 100%;
-    height: 88%;
-    padding: 1rem;
-    background-color: #202020;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const Ul = styled.ul`
@@ -56,12 +57,6 @@ const Form = styled.form`
     width: 100%;
 `;
 
-const ResultContainer = styled.div`
-   width: 100%;
-   height: 70%;
-   overflow-y: scroll;
-`;
-
 const InputContainer = styled.div`
     position: relative;
     display: flex;
@@ -69,21 +64,24 @@ const InputContainer = styled.div`
     align-items: center;
     width: 100%;
     height: 40px;
-    border: 1px solid #ffed97;
+    border: 1px solid #848484;
     border-radius: 20px;
     padding: 0.3rem 0.7rem;
     margin-bottom: 1rem;
 `;
 
 const Input = styled.input`
+  font-family: FontAwesome;
   flex-basis: 90%;
   height: 100%;
   font-size: 1.1rem;
-  color: #ffed97;
-  caret-color: #ffed97;
-  &::placeholder {
+  color: #d2d2d2;
+  caret-color: #848484;
+  &::-webkit-input-placeholder {
     font-size: 0.8rem;
+    font-weight: 400;
     color: #848484;
+    vertical-align: middle;
   }
 `;
 
@@ -107,6 +105,19 @@ const SearchButton = styled.button`
   border: 1px solid #ffed97;
   border-radius: 20px;
   color: #ffed97;
+`;
+
+const ResultContainer = styled.div`
+   width: 100%;
+   flex-grow: 1;
+   overflow-y: scroll;
+`;
+
+const MessageBlock = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
 `;
 
 function Home({ collectionPath }) {
@@ -167,13 +178,13 @@ function Home({ collectionPath }) {
                 <InputContainer>
                     <Input
                         type="text"
-                        placeholder="검색 .. "
+                        placeholder="&#xf002; &nbsp; 검색"
                         lang="ar"
                         maxLength={30}
                         value={inputValue}
                         onChange={onChange} />
                     <ResetButton type="button" onClick={() => setInputValue('')}>
-                        <AiFillCloseCircle />
+                        <AiOutlineCloseCircle />
                     </ResetButton>
                 </InputContainer>
                 {/*<SearchButton type="submit">
@@ -181,11 +192,11 @@ function Home({ collectionPath }) {
                 </SearchButton>*/}
             </Form>
             <ResultContainer>
-               <div>
+                <div>
                    {results ? <Result results={results} collectionPath={collectionPath} />
-                       : <span>{message}</span>
+                       : <MessageBlock>{message}</MessageBlock>
                    }
-               </div>
+                </div>
             </ResultContainer>
         </HomeContainer>
     );
