@@ -5,18 +5,24 @@ import {UserContext} from 'Context';
 import NavItem from 'components/NavItem';
 import styled from 'styled-components';
 
+const NavContainer = styled.div`
+  width: 100%;
+  height: 12%;
+  padding: 0 1rem 1rem;
+  background-color: #202020;
+`;
 
 const Nav = styled.nav`
-  position: absolute;
-  left: 0;
-  bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 10%;
+  height: 100%;
   padding: 0.5em;
-  border-top: 1px solid #000;
+  margin: 0 auto;
+  border: 1px solid #404040;
+  border-radius: 32px;
+  background-color: #303030;
 `;
 
 const Ul = styled.ul`
@@ -24,15 +30,20 @@ const Ul = styled.ul`
   justify-content: space-around;
   align-items: center;
   width: 100%;
-  & li.active div{
-    color: cornflowerblue;
+`;
+
+const Li = styled.li`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &.active div {
+    color: #ffed97;
   }
 `;
 
 const Navigation = () => {
     const data = [{
         id: 1,
-        text: '단어검색',
         href: '/',
         active: true,
         link: true,
@@ -40,7 +51,6 @@ const Navigation = () => {
     },
     {
         id: 2,
-        text: '구글번역',
         href: '/translate',
         active: false,
         link: true,
@@ -48,19 +58,17 @@ const Navigation = () => {
     },
     {
         id: 3,
-        text: '보관함',
         href: '/wordlist',
         active: false,
         link: true,
-        size: '1.5rem',
+        size: '1.7rem',
     },
     {
         id: 4,
-        text: '로그아웃',
         href: '/',
         active: false,
         link: false,
-        size: '1.7rem',
+        size: '2rem',
     }];
     const [list, setList] = useState(data);
 
@@ -81,22 +89,24 @@ const Navigation = () => {
     }
 
     return (
-        <Nav>
-            <Ul>
-                {list.map((item) => (
-                    <li key={item.id} onClick={() => onLinkClick(item.id)} className={item.active ? 'active' : ''}>
-                        {item.link
-                            ? <Link to={item.href}>
-                                  <NavItem id={item.id} size={item.size} text={item.text} />
-                              </Link>
-                            : <button>
-                                  <NavItem id={item.id} size={item.size} text={item.text} />
-                              </button>
-                        }
-                    </li>
-                ))}
-            </Ul>
-        </Nav>
+        <NavContainer>
+            <Nav>
+                <Ul>
+                    {list.map((item) => (
+                        <Li key={item.id} onClick={() => onLinkClick(item.id)} className={item.active ? 'active' : ''}>
+                            {item.link
+                                ? <Link to={item.href}>
+                                    <NavItem id={item.id} size={item.size} />
+                                </Link>
+                                : <button>
+                                    <NavItem id={item.id} size={item.size} />
+                                </button>
+                            }
+                        </Li>
+                    ))}
+                </Ul>
+            </Nav>
+        </NavContainer>
     )
 }
 

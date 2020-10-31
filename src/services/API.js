@@ -1,14 +1,15 @@
 import React from 'react';
 import axios from "axios";
 
-export const getWordResult = async (word) => {
+export const getWordResult = async (word, lang) => {
+    const langs = lang ? 'AR-EN' : 'EN-AR';
     const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
     const targetUrl = process.env.REACT_APP_ARATOOLS_URL;
     const query = process.env.REACT_APP_ARATOOLS_QUERY;
     const http = axios.create({
         baseURL: proxyUrl + targetUrl
     });
-    const { data : { result } } = await http.get(`${query}{"word": "${word}", "dictionary": "AR-EN-WORD-DICTIONARY"}&format=json`);
+    const { data : { result } } = await http.get(`${query}{"word": "${word}", "dictionary": "${langs}-WORD-DICTIONARY"}&format=json`);
     return result;
 }
 

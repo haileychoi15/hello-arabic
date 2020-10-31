@@ -4,7 +4,8 @@ import {MdDelete} from 'react-icons/md';
 import styled, {css} from 'styled-components';
 
 const Li = styled.li`
-  margin-bottom: 1rem;
+  border-bottom: 1px solid #ddd;
+  padding: 0.8rem 0;
 `;
 
 const MainBlock = styled.div`
@@ -22,7 +23,6 @@ const Dt = styled.dt`
   display: inline-block;
   margin-right: 1rem;
   font-size: 0.8rem;
-  font-weight: 600;
 `;
 
 const Dd = styled.dd`

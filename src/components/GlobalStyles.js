@@ -4,8 +4,8 @@ const GlobalStyles = createGlobalStyle`
 
 body {
     font-family: 'Nanum Gothic', sans-serif; 
-    color: #333333;
-    background-color: #fff;
+    color: #fff;
+    background-color: #202020;
     padding: 0;
     margin: 0;
   }
@@ -30,7 +30,7 @@ body {
   
   a {
     text-decoration: none;
-    color: #333;
+    color: #fff;
   }
   
   button, input {
