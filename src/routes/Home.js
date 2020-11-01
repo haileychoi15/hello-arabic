@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Result from "components/Result";
 import {getWordResult} from "services/API";
 import styled, {css} from 'styled-components';
-import {AiOutlineCloseCircle} from 'react-icons/ai';
+import {AiOutlineCloseCircle, AiOutlineSearch} from 'react-icons/ai';
 
 const borderStyles = css`
     ${prop => (prop.position === 'right')
@@ -71,18 +71,11 @@ const InputContainer = styled.div`
 `;
 
 const Input = styled.input`
-  font-family: FontAwesome;
   flex-basis: 90%;
   height: 100%;
   font-size: 1.1rem;
   color: #d2d2d2;
   caret-color: #848484;
-  &::-webkit-input-placeholder {
-    font-size: 0.8rem;
-    font-weight: 400;
-    color: #848484;
-    vertical-align: middle;
-  }
 `;
 
 const ResetButton = styled.button`
@@ -95,6 +88,23 @@ const ResetButton = styled.button`
   color: #848484;
   font-size: 1.2rem;
   transform: translateY(-50%);
+`;
+
+const Placeholder = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 0.7rem;
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  color: #848484;
+  transform: translateY(-50%);
+`;
+
+const PlaceholderText = styled.span`
+  margin-left: 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 400;
 `;
 
 const SearchButton = styled.button`
@@ -111,6 +121,10 @@ const ResultContainer = styled.div`
    width: 100%;
    flex-grow: 1;
    overflow-y: scroll;
+   -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const MessageBlock = styled.div`
@@ -178,15 +192,18 @@ function Home({ collectionPath }) {
                 <InputContainer>
                     <Input
                         type="text"
-                        placeholder="&#xf002; &nbsp; 검색"
                         lang="ar"
                         maxLength={30}
                         value={inputValue}
                         onChange={onChange} />
-                    {Boolean(inputValue.length) &&
-                        <ResetButton type="button" onClick={() => setInputValue('')}>
+                    {Boolean(inputValue.length)
+                        ? <ResetButton type="button" onClick={() => setInputValue('')}>
                             <AiOutlineCloseCircle />
-                        </ResetButton>
+                          </ResetButton>
+                        : <Placeholder>
+                            <AiOutlineSearch />
+                            <PlaceholderText>검색</PlaceholderText>
+                          </Placeholder>
                     }
                 </InputContainer>
                 {/*<SearchButton type="submit">

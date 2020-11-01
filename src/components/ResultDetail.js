@@ -52,6 +52,10 @@ const SubResultBlock = styled.div`
   color: #a8a8a8;
 `;
 
+const ArabicBlock = styled.span`
+  font-size: 0.7rem;
+`;
+
 function ResultDetail ({ result, collectionPath }) {
     const [open, setOpen] = useState(false);
     const [add, setAdd] = useState(false);
@@ -99,7 +103,7 @@ function ResultDetail ({ result, collectionPath }) {
             <div>
                 <SubResultBlock>
                     <span>{result.solution.posNice}</span>
-                    <span>, Root {decodeHtml(result.solution.root)}</span>
+                    <span>, Root <ArabicBlock>{decodeHtml(result.solution.root)}</ArabicBlock></span>
                 </SubResultBlock>
             </div>
         </Li>

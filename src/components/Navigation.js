@@ -39,41 +39,27 @@ const Navigation = () => {
         id: 1,
         href: '/',
         active: true,
-        link: true,
         size: '1.7rem'
     },
     {
         id: 2,
         href: '/translate',
         active: false,
-        link: true,
         size: '1.7rem',
     },
     {
         id: 3,
         href: '/wordlist',
         active: false,
-        link: true,
         size: '1.7rem',
     },
     {
         id: 4,
-        href: '/',
+        href: '/user',
         active: false,
-        link: false,
         size: '2rem',
     }];
     const [list, setList] = useState(data);
-
-    const history = useHistory();
-    const setUserObj = useContext(UserContext)[1];
-
-    const onLogOutClick = () => {
-        authService.signOut();
-        setUserObj(null);
-        const homeURL = '/';
-        if (history.location.pathname !== homeURL) history.push(homeURL);
-    }
 
     const onLinkClick = (id) => {
         setList(list.map((item, index) =>  (id === item.id)
@@ -87,14 +73,9 @@ const Navigation = () => {
                 <Ul>
                     {list.map((item) => (
                         <Li key={item.id} onClick={() => onLinkClick(item.id)} className={item.active ? 'active' : ''}>
-                            {item.link
-                                ? <Link to={item.href}>
-                                    <NavItem id={item.id} size={item.size} />
-                                </Link>
-                                : <button>
-                                    <NavItem id={item.id} size={item.size} />
-                                </button>
-                            }
+                            <Link to={item.href}>
+                                <NavItem id={item.id} size={item.size} />
+                            </Link>
                         </Li>
                     ))}
                 </Ul>

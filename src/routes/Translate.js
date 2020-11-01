@@ -29,13 +29,13 @@ const SelectBlock = styled.div`
   height: 40px;
   border: 1px solid #ffed97;
   border-radius: 20px;
-  background-color: #ffed97;
+  background: none;
 `;
 
 const Select = styled.select`
   width: 60px;
   border: none;
-  color: #333;
+  color: #ffed97;
   background: none;
 `;
 
@@ -55,7 +55,7 @@ const TextareaBlock = styled.div`
   padding: 0.5rem;
   margin-bottom: 1rem;
   color: #333;
-  background: #fff;
+  background-color: #ffed97;
   &.result-textarea {
     background-color: #303030;
   }
@@ -118,7 +118,7 @@ function Translate() {
     const collectionPath = 'translations';
     const userObj = useContext(UserContext)[0];
     const [value, setValue] = useState('');
-    const [results, setResults] = useState('test');
+    const [results, setResults] = useState('helloooooo');
     const [add, setAdd] = useState(false);
     const [dataId, setDataId] = useState('');
     const [sourceLang, setSourceLang] = useState('ar');

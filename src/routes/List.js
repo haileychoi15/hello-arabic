@@ -56,6 +56,11 @@ const ResultContainer = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Message = styled.span`

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {dbService} from 'myFirebase';
-import {MdDelete} from 'react-icons/md';
+import {MdDeleteForever} from 'react-icons/md';
 import styled, {css} from 'styled-components';
 
 const Li = styled.li`
@@ -18,6 +18,7 @@ const MainResultBlock = styled.div`
 
 const Dl = styled.dl`
   width: 100%;
+  padding-right: 1.2rem;
 `;
 
 const Dt = styled.dt`
@@ -33,13 +34,25 @@ const Dt = styled.dt`
 const Dd = styled.dd`
   display: inline-block;
   font-size: 0.8rem;
+  &.open {
+    display: block;
+    line-height: 1.2rem;
+    color: #bbb;
+  }
+  &.ar {
+    margin-top: 0.3rem;
+  }
+`;
+
+const ArabicBlock = styled.span`
+  font-size: 0.9rem;
+  margin-left: 0.4rem;
 `;
 
 const DeleteButton = styled.button`
   position: absolute;
-  top: 50%;
+  top: 0;
   right: 0;
-  transform: translateY(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -49,12 +62,19 @@ const DeleteButton = styled.button`
 
 const SubResultBlock = styled.div`
   width: 100%;
+  margin-top: 0.5rem;
   font-size: 0.6rem;
-  line-height: 1.2rem;
+  text-align: right;
   color: #a8a8a8;
 `;
 
 function ListDetail({ menu, item }) {
+
+    const dateString = item.date.toDate();
+    const day = dateString.toLocaleDateString().replaceAll('.', '').replaceAll(' ', '.');
+    const [hours, minutes] = dateString.toLocaleTimeString().split(':');
+    const date = `${day} ${hours}:${minutes}`;
+    console.log(date);
     const [open, setOpen] = useState(false);
     const decodeHtml = (html) => {
         const element = document.createElement('textarea');
@@ -73,24 +93,36 @@ function ListDetail({ menu, item }) {
                         ? <>
                             <Dt menu={menu}>{decodeHtml(item.vocForm)}</Dt>
                             <Dd>{item.niceGloss}</Dd>
+                            {open &&
+                                <>
+                                    <Dd className="open">{item.posNice}</Dd>
+                                    <Dd className="open">Root
+                                        <ArabicBlock>{decodeHtml(item.root)}</ArabicBlock>
+                                    </Dd>
+                                </>
+                            }
                           </>
                         : <>
-                            <Dt menu={menu}>{item.targetValue}</Dt>
-                            <Dd>{item.sourceValue}</Dd>
-                        </>
+                            {item.sourceLang === 'ar'
+                                ? <Dt menu={menu}>{decodeHtml(item.sourceValue)}</Dt>
+                                : <Dt menu={menu}>{item.sourceValue}</Dt>
+                            }
+                            {open &&
+                                <>
+                                {item.targetLang === 'ar'
+                                        ? <Dd className="open ar">{decodeHtml(item.targetValue)}</Dd>
+                                        : <Dd className="open">{item.targetValue}</Dd>
+                                }
+                                </>
+                            }
+                          </>
                     }
                 </Dl>
                 <DeleteButton onClick={onDeleteClick}>
-                    <MdDelete />
+                    <MdDeleteForever />
                 </DeleteButton>
             </MainResultBlock>
-            {open &&
-            <div>
-                <SubResultBlock>
-                    <span>{item.id}</span>
-                    <span>{item.date[0]}</span>
-                </SubResultBlock>
-            </div>}
+            <SubResultBlock>{date}</SubResultBlock>
         </Li>
     );
 }
