@@ -73,7 +73,7 @@ const Message = styled.span`
   transform: translate(-50%, -50%);
 `;
 
-function List({ collectionPath }) {
+function List() {
     const initialMenuList = [
         {
             text : '단어',
@@ -95,7 +95,7 @@ function List({ collectionPath }) {
 
     useEffect(() => {
         getDataList('words');
-    },[collectionPath]);
+    },[]);
 
     const getDataList = (category) => {
         dbService.collection(category).orderBy('date', 'desc').onSnapshot(snapshot => {

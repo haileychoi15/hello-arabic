@@ -168,7 +168,7 @@ function Home({ collectionPath }) {
 
         const test1 = 'زَهْرَة';
         const test2 = 'تمشى';
-        const result = await getWordResult(test1, lang);
+        const result = await getWordResult(inputValue, lang);
         result.length ? setResults(result) : setMessage('검색결과가 없습니다.');
     }
 

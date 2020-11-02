@@ -114,8 +114,7 @@ const Message = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-function Translate() {
-    const collectionPath = 'translations';
+function Translate({ collectionPath }) {
     const userObj = useContext(UserContext)[0];
     const [value, setValue] = useState('');
     const [results, setResults] = useState('helloooooo');

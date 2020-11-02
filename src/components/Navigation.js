@@ -1,7 +1,4 @@
-import React, {useContext, useState} from 'react';
-import { authService } from 'myFirebase';
-import { Link, useHistory } from 'react-router-dom';
-import {UserContext} from 'Context';
+import React, {useState} from 'react';
 import NavItem from 'components/NavItem';
 import styled from 'styled-components';
 
@@ -37,31 +34,38 @@ const Li = styled.li`
 const Navigation = () => {
     const data = [{
         id: 1,
-        href: '/',
+        title: 'home',
         active: true,
         size: '1.7rem'
     },
     {
         id: 2,
-        href: '/translate',
+        title: 'translate',
         active: false,
         size: '1.7rem',
     },
     {
         id: 3,
-        href: '/wordlist',
+        title: 'list',
         active: false,
         size: '1.7rem',
     },
     {
         id: 4,
-        href: '/user',
+        title: 'user',
         active: false,
         size: '2rem',
     }];
     const [list, setList] = useState(data);
 
-    const onLinkClick = (id) => {
+    const onNavClick = (id, title) => {
+
+        // 리팩토링 필요...
+        const apps = document.querySelectorAll('.app');
+        apps.forEach(app => {
+            app.classList.contains(title) ?  app.classList.add('show') :  app.classList.remove('show');
+        });
+
         setList(list.map((item, index) =>  (id === item.id)
             ? {...item, active: true}
             : {...item, active: false}));
@@ -72,10 +76,8 @@ const Navigation = () => {
             <Nav>
                 <Ul>
                     {list.map((item) => (
-                        <Li key={item.id} onClick={() => onLinkClick(item.id)} className={item.active ? 'active' : ''}>
-                            <Link to={item.href}>
-                                <NavItem id={item.id} size={item.size} />
-                            </Link>
+                        <Li key={item.id} onClick={() => onNavClick(item.id, item.title)} className={item.active ? 'active' : ''}>
+                            <NavItem id={item.id} size={item.size} />
                         </Li>
                     ))}
                 </Ul>

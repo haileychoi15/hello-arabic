@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import {IconContext} from "react-icons";
-import {MdSearch, MdGTranslate, MdBookmark, MdPerson, MdAccountCircle} from "react-icons/md";
+import {IconContext} from 'react-icons';
+import {MdSearch, MdGTranslate, MdBookmark, MdPerson} from 'react-icons/md';
 
 const ItemContainer = styled.div`
   display: flex;
