@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
+import React from 'react';
 import Auth from 'routes/Auth';
 import Home from 'routes/Home';
 import List from 'routes/List';
@@ -57,7 +56,7 @@ function AppRouter ({ login }) {
                     <Navigation />
                 </NavContainer>
               </>
-            : <Home />}
+            : <Auth />}
         </>
     )
 }
