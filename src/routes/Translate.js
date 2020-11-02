@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import styled from 'styled-components';
-import {dbService} from "myFirebase";
+import {dbService} from 'myFirebase';
 import {googleTranslate} from 'services/API';
 import {MdSwapHoriz} from 'react-icons/md'
 import {MdBookmarkBorder, MdBookmark} from 'react-icons/md';
@@ -116,8 +116,8 @@ const Message = styled.div`
 
 function Translate({ collectionPath }) {
     const userObj = useContext(UserContext)[0];
-    const [value, setValue] = useState('');
-    const [results, setResults] = useState('helloooooo');
+    const [inputValue, setInputValue] = useState('');
+    const [results, setResults] = useState('');
     const [add, setAdd] = useState(false);
     const [dataId, setDataId] = useState('');
     const [sourceLang, setSourceLang] = useState('ar');
@@ -126,7 +126,7 @@ function Translate({ collectionPath }) {
 
     const onInputChange = (e) => {
         const { value } = e.target;
-        setValue(value);
+        setInputValue(value);
         setMessage('');
     }
 
@@ -150,9 +150,8 @@ function Translate({ collectionPath }) {
         e.preventDefault();
         setAdd(false);
         setResults('');
-        const text = 'مَاذَا أَعْجَبكُمْ فِي بَلَدِنَا؟';
-        //const result = await googleTranslate(text, sourceLang, targetLang);
-        //setResults(result);
+        const result = await googleTranslate(inputValue, sourceLang, targetLang);
+        setResults(result);
     }
 
     const saveResult = async () => {
@@ -161,7 +160,7 @@ function Translate({ collectionPath }) {
             creator: userObj.uid,
             sourceLang,
             targetLang,
-            sourceValue: value,
+            sourceValue: inputValue,
             targetValue: results,
             date
         });
@@ -174,7 +173,7 @@ function Translate({ collectionPath }) {
 
     const onAddClick = () => {
 
-        if (!value.length) {
+        if (!inputValue.length) {
             setMessage('번역할 문장을 입력하세요.');
             return false;
         }
@@ -209,7 +208,7 @@ function Translate({ collectionPath }) {
                     </SelectBlock>
                 </LangContainer>
                 <TextareaBlock>
-                    <Textarea id="source-context" rows="8" placeholder="내용을 입력해주세요." value={value} onChange={onInputChange} />
+                    <Textarea id="source-context" rows="8" placeholder="내용을 입력해주세요." value={inputValue} onChange={onInputChange} />
                 </TextareaBlock>
                 {/*<SearchButton type="submit">번역하기</SearchButton>*/}
                 <TextareaBlock className="result-textarea" >

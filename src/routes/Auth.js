@@ -25,7 +25,7 @@ const AccountButton = styled.button`
 
 const Form = styled.form`
   width: 100%;
-  transform: translateY(-10%);
+  transform: translateY(-15%);
 `;
 
 const InputContainer = styled.div`

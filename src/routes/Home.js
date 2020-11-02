@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import Result from "components/Result";
+import Result from 'components/Result';
 import {getWordResult} from "services/API";
 import styled, {css} from 'styled-components';
 import {AiOutlineCloseCircle, AiOutlineSearch} from 'react-icons/ai';
