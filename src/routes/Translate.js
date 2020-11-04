@@ -5,6 +5,7 @@ import {googleTranslate} from 'services/API';
 import {MdSwapHoriz} from 'react-icons/md'
 import {MdBookmarkBorder, MdBookmark} from 'react-icons/md';
 import {UserContext} from 'Context';
+import {AiOutlineCloseCircle} from "react-icons/ai";
 
 const Form = styled.form`
   display: flex;
@@ -49,19 +50,14 @@ const SwitchButton = styled.button`
 `;
 
 const TextareaBlock = styled.div`
+  position: relative;
   width: 100%;
   border: 1px solid #404040;
   border-radius: 8px;
-  padding: 0.5rem;
+  padding: 0.5rem 1.5rem 0.5rem 0.5rem;  
   margin-bottom: 1rem;
-  color: #333;
-  background-color: #ffed97;
-  &.result-textarea {
-    background-color: #303030;
-  }
-  &.result-textarea textarea {
-    color: #eee;
-  }
+  color: #eee;
+  background-color: #303030;
 `;
 
 const Textarea = styled.textarea`
@@ -71,10 +67,26 @@ const Textarea = styled.textarea`
   padding: 0;
   font-size: 1.1rem;
   background: none;
+  color: #eee;
   resize: none;
+  &::placeholder {
+    font-size: 0.9rem;
+  }
 `;
 
-const SearchButton = styled.button`
+const ResetButton = styled.button`
+  position: absolute;
+  top: 1rem;
+  right: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #848484;
+  font-size: 1.2rem;
+  transform: translateY(-50%);
+`;
+
+const SubmitButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -86,32 +98,20 @@ const SearchButton = styled.button`
   background: #ffed97;
 `;
 
-const AddButtonBlock = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  font-size: 0.8rem;
-  color: #eee;
-`;
-
 const AddButton = styled.button`
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 35px;
-  height: 35px;
-  border: 1px solid #ffed97;
-  border-radius: 50%;
   font-size: 1.2rem;
   color: #ffed97;
 `;
 
 const Message = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 0.9rem;
 `;
 
 function Translate({ collectionPath }) {
@@ -149,7 +149,6 @@ function Translate({ collectionPath }) {
     const onSubmit = async (e) => {
         e.preventDefault();
         setAdd(false);
-        setResults('');
         const result = await googleTranslate(inputValue, sourceLang, targetLang);
         setResults(result);
     }
@@ -172,7 +171,6 @@ function Translate({ collectionPath }) {
     }
 
     const onAddClick = () => {
-
         if (!inputValue.length) {
             setMessage('번역할 문장을 입력하세요.');
             return false;
@@ -181,7 +179,6 @@ function Translate({ collectionPath }) {
             setMessage('번역 결과가 없습니다.');
             return false;
         }
-
         add ? deleteResult() : saveResult();
         setAdd(prev => !prev);
     }
@@ -208,19 +205,24 @@ function Translate({ collectionPath }) {
                     </SelectBlock>
                 </LangContainer>
                 <TextareaBlock>
-                    <Textarea id="source-context" rows="8" placeholder="내용을 입력해주세요." value={inputValue} onChange={onInputChange} />
+                    <Textarea id="source-context" rows="6" placeholder="내용을 입력해주세요." value={inputValue} onChange={onInputChange} />
+                    {Boolean(inputValue.length) &&
+                        <ResetButton type="button" onClick={() => setInputValue('')}>
+                            <AiOutlineCloseCircle />
+                        </ResetButton>
+                    }
                 </TextareaBlock>
-                {/*<SearchButton type="submit">번역하기</SearchButton>*/}
-                <TextareaBlock className="result-textarea" >
-                    <Textarea id="target-context" rows="8" placeholder="번역 결과입니다." value={results} readOnly />
+                {Boolean(results.length) &&
+                <TextareaBlock>
+                    <Textarea id="target-context" rows="6" placeholder="번역 결과입니다." value={results} readOnly />
+                    <AddButton type="button" onClick={onAddClick}>
+                        {add ? <MdBookmark /> : <MdBookmarkBorder />}
+                    </AddButton>
                 </TextareaBlock>
+                }
+                <SubmitButton type="submit">번역하기</SubmitButton>
             </Form>
-            <AddButtonBlock>
-                <Message>{message}</Message>
-                <AddButton type="button" onClick={onAddClick}>
-                    {add ? <MdBookmark /> : <MdBookmarkBorder />}
-                </AddButton>
-            </AddButtonBlock>
+            <Message>{message}</Message>
         </div>
     );
 }

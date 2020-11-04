@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {dbService} from "myFirebase";
+import {dbService} from 'myFirebase';
 import styled from 'styled-components';
 import {MdBookmarkBorder, MdBookmark} from 'react-icons/md';
 import {UserContext} from 'Context';
@@ -22,7 +22,6 @@ const Dl = styled.dl`
 `;
 
 const Dt = styled.dt`
-  //font-family: 'Tajawal', sans-serif;
   display: inline-block;
   margin-right: 0.5rem;
   font-size: 1.1rem;

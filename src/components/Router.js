@@ -43,7 +43,7 @@ function AppRouter ({ login }) {
                         <Home collectionPath="words" />
                     </AppBlock>
                     <AppBlock className="app translate">
-                        <Translate collectionPath="translate" />
+                        <Translate collectionPath="translations" />
                     </AppBlock>
                     <AppBlock className="app list">
                         <List />

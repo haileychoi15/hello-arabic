@@ -43,8 +43,8 @@ function App() {
     }, []);
     return (
         <BodyContainer>
+            <GlobalStyles />
             <Container>
-                <GlobalStyles />
                 <UserContext.Provider value={[userObj, setUserObj]}>
                     {init ? <AppRouter login={Boolean(userObj)} />
                           : <Loading>로딩중 ...</Loading>

@@ -166,8 +166,6 @@ function Home({ collectionPath }) {
         setMessage( hasVal ? '결과를 가져오는 중...' : '단어를 입력해주세요.');
         if (!hasVal) return false;
 
-        const test1 = 'زَهْرَة';
-        const test2 = 'تمشى';
         const result = await getWordResult(inputValue, lang);
         result.length ? setResults(result) : setMessage('검색결과가 없습니다.');
     }

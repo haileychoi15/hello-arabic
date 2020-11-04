@@ -34,6 +34,7 @@ body {
   }
   
   button, input, textarea, select, option {
+    font-family: 'Nanum Gothic', sans-serif; 
     padding: 0;
     border: none;
     cursor: pointer;

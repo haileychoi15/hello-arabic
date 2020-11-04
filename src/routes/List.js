@@ -99,11 +99,14 @@ function List() {
 
     const getDataList = (category) => {
         dbService.collection(category).orderBy('date', 'desc').onSnapshot(snapshot => {
-            const results = snapshot.docs.map(doc => ({
+            const results = snapshot.docs
+                .filter(doc => doc.data().creator === userObj.uid)
+                .map(doc => ({
                 id: doc.id,
-                ...doc.data()
+                ...doc.data(),
+                date: doc.data().date.toDate()
             }));
-            (results.length) ? setEmpty(false) : setEmpty(true);
+            (results.length === 0) ? setEmpty(true) : setEmpty(false);
             (category === 'words') ? setWords(results) : setTranslations(results);
         });
     }
@@ -118,7 +121,7 @@ function List() {
     }
 
     return (
-        <ListContainer empty={empty}>
+        <ListContainer>
             <Ul>
                 {menuList.map((item, index) =>
                     <Li key={index} onClick={() => onMenuClick(index)} className={item.active? 'active' : ''} position={item.position}>
@@ -132,18 +135,14 @@ function List() {
                     : <>
                         {menu
                             ? <ul>
-                                {words
-                                    .filter(word => word.creator === userObj.uid)
-                                    .map(word => <ListDetail
+                                {words.map(word => <ListDetail
                                         key={word.id}
                                         menu={menu}
                                         item={word}
                                     /> )}
                               </ul>
                             : <ul>
-                                {translations
-                                    .filter(transaction => transaction.creator === userObj.uid)
-                                    .map(transaction => <ListDetail
+                                {translations.map(transaction => <ListDetail
                                         key={transaction.id}
                                         menu={menu}
                                         item={transaction}

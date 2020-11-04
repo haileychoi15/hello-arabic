@@ -69,12 +69,9 @@ const SubResultBlock = styled.div`
 `;
 
 function ListDetail({ menu, item }) {
-
-    const dateString = item.date.toDate();
-    const day = dateString.toLocaleDateString().replaceAll('.', '').replaceAll(' ', '.');
-    const [hours, minutes] = dateString.toLocaleTimeString().split(':');
+    const day = item.date.toLocaleDateString().replaceAll('.', '').replaceAll(' ', '.');
+    const [hours, minutes] = item.date.toLocaleTimeString().split(':');
     const date = `${day} ${hours}:${minutes}`;
-    console.log(date);
     const [open, setOpen] = useState(false);
     const decodeHtml = (html) => {
         const element = document.createElement('textarea');
