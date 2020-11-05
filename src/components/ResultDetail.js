@@ -25,23 +25,32 @@ const Dt = styled.dt`
   display: inline-block;
   margin-right: 0.5rem;
   font-size: 1.1rem;
+  @media screen and (min-width: 48rem) {
+    margin-right: 0.5rem;
+    font-size: 1.3rem;
+  }
 `;
 
 const Dd = styled.dd`
   display: inline-block;
   font-size: 0.8rem;
+  @media screen and (min-width: 48rem) {
+    font-size: 1.1rem;
+  }
 `;
 
 const AddButton = styled.button`
   position: absolute;
-  top: 50%;
+  top: 0;
   right: 0;
-  transform: translateY(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: #ffed97;
+  @media screen and (min-width: 48rem) {
+    font-size: 1.5rem;
+  }
 `;
 
 const SubResultBlock = styled.div`
@@ -49,10 +58,15 @@ const SubResultBlock = styled.div`
   font-size: 0.6rem;
   line-height: 1.2rem;
   color: #a8a8a8;
+  @media screen and (min-width: 48rem) {
+    font-size: 0.8rem;
+    line-height: 1.6rem;
+  }
 `;
 
 const ArabicBlock = styled.span`
   font-size: 0.7rem;
+  line-height: 1.5rem;
 `;
 
 function ResultDetail ({ result, collectionPath }) {

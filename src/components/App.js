@@ -12,15 +12,13 @@ const BodyContainer = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: #efefef;
+  //background-color: #202020;
 `;
 
 const Container = styled.div`
   position: relative;
   width: 100vw;
   height: 100vh;
-  max-width: 375px;
-  max-height: 667px;
-  background-color: #fff;
 `;
 
 const Loading = styled.div`

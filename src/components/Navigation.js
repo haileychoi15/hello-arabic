@@ -13,6 +13,9 @@ const Nav = styled.nav`
   border: 1px solid #404040;
   border-radius: 32px;
   background-color: #303030;
+  @media screen and (min-width: 30rem) {
+    width: 375px;
+  }
 `;
 
 const Ul = styled.ul`

@@ -23,9 +23,27 @@ const AccountButton = styled.button`
   color: #ffed97;
 `;
 
+const MenuBlock = styled.div`
+  display: none;
+  font-family: 'Slabo 27px', serif;
+  margin-bottom: 2rem;
+  font-size: 3rem;
+  color: #eee;
+  text-align: center;
+  @media screen and (min-width: 30rem) {
+    display: block;
+    width: 375px;
+    transform: translateY(0);
+  }
+`;
+
 const Form = styled.form`
   width: 100%;
   transform: translateY(-15%);
+  @media screen and (min-width: 30rem) {
+    width: 375px;
+    transform: translateY(0);
+  }
 `;
 
 const InputContainer = styled.div`
@@ -130,6 +148,9 @@ function Auth() {
             <AccountButton onClick={toggleAccount}>
                 {newAccount ? '로그인' : '계정 등록'}
             </AccountButton>
+            <MenuBlock>
+                {!newAccount ? 'Login' : 'Join'}
+            </MenuBlock>
             <Form onSubmit={onSubmit}>
                 <InputContainer>
                     <Input name="email"

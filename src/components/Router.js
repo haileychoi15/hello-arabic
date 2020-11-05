@@ -27,9 +27,10 @@ const NavContainer = styled.div`
   width: 100%;
   height: 12%;
   padding: 0 1rem;
+  margin: 0 auto;
   background-color: #202020;
-  @media screen and (min-width: 375px) {
-    padding: 1rem;
+  @media screen and (min-width: 23.43rem) { //375px
+    padding: 1rem;  
   }
 `;
 

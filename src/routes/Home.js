@@ -52,7 +52,7 @@ const Li = styled.li`
 
 const Form = styled.form`
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
 `;
@@ -64,18 +64,27 @@ const InputContainer = styled.div`
     align-items: center;
     width: 100%;
     height: 45px;
-    border: 1px solid #848484;
-    border-radius: 22px;
-    padding: 0.3rem 0.7rem;
+    border: none;
     margin-bottom: 1rem;
 `;
 
 const Input = styled.input`
-  flex-basis: 90%;
-  height: 100%;
+  width: 100%;
+  height: 45px;
+  border: 1px solid #848484;
+  border-radius: 22px;
+  padding: 0.3rem 2rem 0.3rem 1rem;
   font-size: 1.1rem;
   color: #d2d2d2;
   caret-color: #848484;
+  &:active,
+  &:focus {
+    border: 1px solid #ffed97;
+  }
+  @media screen and (min-width: 48rem) {
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    font-size: 1.2rem;
+  }
 `;
 
 const ResetButton = styled.button`
@@ -93,7 +102,7 @@ const ResetButton = styled.button`
 const Placeholder = styled.div`
   position: absolute;
   top: 50%;
-  left: 0.7rem;
+  left: 1rem;
   display: flex;
   align-items: center;
   font-size: 1.1rem;
@@ -105,16 +114,6 @@ const PlaceholderText = styled.span`
   margin-left: 0.3rem;
   font-size: 0.8rem;
   font-weight: 400;
-`;
-
-const SearchButton = styled.button`
-  width: 100%;
-  height: 40px;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ffed97;
-  border-radius: 20px;
-  color: #ffed97;
 `;
 
 const ResultContainer = styled.div`
@@ -204,16 +203,13 @@ function Home({ collectionPath }) {
                           </Placeholder>
                     }
                 </InputContainer>
-                {/*<SearchButton type="submit">
-                    검색
-                </SearchButton>*/}
             </Form>
             <ResultContainer>
-                <div>
+                <>
                    {results ? <Result results={results} collectionPath={collectionPath} />
                        : <MessageBlock>{message}</MessageBlock>
                    }
-                </div>
+                </>
             </ResultContainer>
         </HomeContainer>
     );
