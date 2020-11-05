@@ -10,6 +10,15 @@ const Li = styled.li`
   padding: 0.5rem;
   margin-bottom: 0.8rem;
   background-color: #303030;
+  @media screen and (min-width: 30rem) {
+    transition: all 150ms ease-in-out;
+    &:hover {
+      border: 1px solid #eee;
+    }
+    &:hover AddButton {
+      display: flex;
+    }
+  }
 `;
 
 const MainResultBlock = styled.div`
@@ -25,8 +34,7 @@ const Dt = styled.dt`
   display: inline-block;
   margin-right: 0.5rem;
   font-size: 1.1rem;
-  @media screen and (min-width: 48rem) {
-    margin-right: 0.5rem;
+  @media screen and (min-width: 30rem) {
     font-size: 1.3rem;
   }
 `;
@@ -34,7 +42,7 @@ const Dt = styled.dt`
 const Dd = styled.dd`
   display: inline-block;
   font-size: 0.8rem;
-  @media screen and (min-width: 48rem) {
+  @media screen and (min-width: 30rem) {
     font-size: 1.1rem;
   }
 `;
@@ -48,8 +56,19 @@ const AddButton = styled.button`
   align-items: center;
   font-size: 1.2rem;
   color: #ffed97;
-  @media screen and (min-width: 48rem) {
-    font-size: 1.5rem;
+  @media screen and (min-width: 30rem) {
+    display: none;
+    font-size: 1.6rem;
+    transition: all 150ms ease-in-out;
+    color: #848484;
+    transition: all 150ms ease-in-out;
+    ${Li}:hover & {
+      display: flex;
+    }
+    &:hover {
+      color: #ffed97;
+    }
+  }
   }
 `;
 
@@ -58,7 +77,7 @@ const SubResultBlock = styled.div`
   font-size: 0.6rem;
   line-height: 1.2rem;
   color: #a8a8a8;
-  @media screen and (min-width: 48rem) {
+  @media screen and (min-width: 30rem) {
     font-size: 0.8rem;
     line-height: 1.6rem;
   }

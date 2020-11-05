@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Result from 'components/Result';
 import {getWordResult} from "services/API";
 import styled, {css} from 'styled-components';
+import MenuBlock from 'components/MenuBlock';
 import {AiOutlineCloseCircle, AiOutlineSearch} from 'react-icons/ai';
 
 const borderStyles = css`
@@ -66,6 +67,10 @@ const InputContainer = styled.div`
     height: 45px;
     border: none;
     margin-bottom: 1rem;
+    @media screen and (min-width: 30rem) {
+      width: 375px;
+      margin: 0 auto 2rem;
+  }
 `;
 
 const Input = styled.input`
@@ -81,7 +86,7 @@ const Input = styled.input`
   &:focus {
     border: 1px solid #ffed97;
   }
-  @media screen and (min-width: 48rem) {
+  @media screen and (min-width: 30rem) {
     padding: 0.5rem 2rem 0.5rem 1rem;
     font-size: 1.2rem;
   }
@@ -123,6 +128,13 @@ const ResultContainer = styled.div`
    -ms-overflow-style: none;
   &::-webkit-scrollbar {
     display: none;
+  }
+  @media screen and (min-width: 30rem) {
+    width: 90%;
+    margin: 0 auto;
+  }
+  @media screen and (min-width: 48rem) {
+    width: 70%;
   }
 `;
 
@@ -178,6 +190,7 @@ function Home({ collectionPath }) {
 
     return (
         <HomeContainer>
+            <MenuBlock menu="Word Search" />
             <Ul>
                 {langList.map((item, index) =>
                     <Li key={index} onClick={() => onLangClick(index)} className={item.active? 'active' : ''} position={item.position}>

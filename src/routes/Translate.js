@@ -5,6 +5,7 @@ import {googleTranslate} from 'services/API';
 import {MdSwapHoriz} from 'react-icons/md'
 import {MdBookmarkBorder, MdBookmark} from 'react-icons/md';
 import {UserContext} from 'Context';
+import MenuBlock from 'components/MenuBlock';
 import {AiOutlineCloseCircle} from "react-icons/ai";
 
 const Form = styled.form`
@@ -12,6 +13,14 @@ const Form = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @media screen and (min-width: 30rem) {
+    width: 70%;
+    margin: 0 auto;
+  }
+  @media screen and (min-width: 30rem) {
+    width: 40%;
+    min-width: 400px;
+  }
 `;
 
 const LangContainer = styled.div`
@@ -96,6 +105,10 @@ const SubmitButton = styled.button`
   margin-bottom: 1rem;
   color: #333;
   background: #ffed97;
+  @media screen and (min-width: 30rem) {
+    width: 100px;
+    margin: 0 0 5rem auto;
+  }
 `;
 
 const AddButton = styled.button`
@@ -107,6 +120,13 @@ const AddButton = styled.button`
   align-items: center;
   font-size: 1.2rem;
   color: #ffed97;
+  @media screen and (min-width: 30rem) {
+    font-size: 1.6rem;
+    color: #848484;
+    transition: all 150ms ease-in-out;
+    &:hover {
+      color: #ffed97;
+    }
 `;
 
 const MessageBlock = styled.div`
@@ -182,47 +202,50 @@ function Translate({ collectionPath }) {
         setAdd(prev => !prev);
     }
     return (
-        <Form action="" onSubmit={onSubmit}>
-            <LangContainer>
-                <SelectBlock>
-                    <Select name="source-langs" value={sourceLang} onChange={onLangChange}>
-                        <option value="ar">아랍어</option>
-                        <option value="en">영어</option>
-                        <option value="ko">한국어</option>
-                    </Select>
-                </SelectBlock>
-                <SwitchButton type="button" onClick={onLangSwitch}>
-                    <MdSwapHoriz />
-                </SwitchButton>
-                <SelectBlock>
-                    <Select name="target-langs" value={targetLang} onChange={onLangChange}>
-                        <option value="ar">아랍어</option>
-                        <option value="en">영어</option>
-                        <option value="ko">한국어</option>
-                    </Select>
-                </SelectBlock>
-            </LangContainer>
-            <TextareaBlock>
-                <Textarea id="source-context" rows="6" placeholder="내용을 입력해주세요." value={inputValue} onChange={onInputChange} />
-                {Boolean(inputValue.length) &&
-                    <ResetButton type="button" onClick={() => setInputValue('')}>
-                        <AiOutlineCloseCircle />
-                    </ResetButton>
+        <>
+            <MenuBlock menu="Translate" />
+            <Form action="" onSubmit={onSubmit}>
+                <LangContainer>
+                    <SelectBlock>
+                        <Select name="source-langs" value={sourceLang} onChange={onLangChange}>
+                            <option value="ar">아랍어</option>
+                            <option value="en">영어</option>
+                            <option value="ko">한국어</option>
+                        </Select>
+                    </SelectBlock>
+                    <SwitchButton type="button" onClick={onLangSwitch}>
+                        <MdSwapHoriz />
+                    </SwitchButton>
+                    <SelectBlock>
+                        <Select name="target-langs" value={targetLang} onChange={onLangChange}>
+                            <option value="ar">아랍어</option>
+                            <option value="en">영어</option>
+                            <option value="ko">한국어</option>
+                        </Select>
+                    </SelectBlock>
+                </LangContainer>
+                <TextareaBlock>
+                    <Textarea id="source-context" rows="6" placeholder="내용을 입력해주세요." value={inputValue} onChange={onInputChange} />
+                    {Boolean(inputValue.length) &&
+                        <ResetButton type="button" onClick={() => setInputValue('')}>
+                            <AiOutlineCloseCircle />
+                        </ResetButton>
+                    }
+                </TextareaBlock>
+                <SubmitButton type="submit">번역하기</SubmitButton>
+                {Boolean(results.length)
+                    ? <>
+                        <TextareaBlock>
+                            <Textarea id="target-context" rows="6" placeholder="번역 결과입니다." value={results} readOnly />
+                            <AddButton type="button" onClick={onAddClick}>
+                                {add ? <MdBookmark /> : <MdBookmarkBorder />}
+                            </AddButton>
+                        </TextareaBlock>
+                    </>
+                    : <MessageBlock>{message}</MessageBlock>
                 }
-            </TextareaBlock>
-            {Boolean(results.length)
-                ? <>
-                    <TextareaBlock>
-                        <Textarea id="target-context" rows="6" placeholder="번역 결과입니다." value={results} readOnly />
-                        <AddButton type="button" onClick={onAddClick}>
-                            {add ? <MdBookmark /> : <MdBookmarkBorder />}
-                        </AddButton>
-                    </TextareaBlock>
-                  </>
-                : <MessageBlock>{message}</MessageBlock>
-            }
-            <SubmitButton type="submit">번역하기</SubmitButton>
-        </Form>
+            </Form>
+        </>
     );
 }
 

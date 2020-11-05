@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import {UserContext} from 'Context';
 import {authService} from 'myFirebase';
 import styled from 'styled-components';
+import MenuBlock from 'components/MenuBlock';
 
 const UserContainer = styled.div`
   position: relative;
@@ -26,6 +27,7 @@ function User() {
     }
     return (
         <UserContainer>
+            <MenuBlock menu="My Profile" />
             <LogoutButton onClick={onLogOutClick}>로그아웃</LogoutButton>
         </UserContainer>
     );

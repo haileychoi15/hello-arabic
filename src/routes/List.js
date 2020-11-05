@@ -3,6 +3,7 @@ import ListDetail from 'components/ListDetail';
 import {UserContext} from 'Context';
 import {dbService} from 'myFirebase';
 import styled, {css} from 'styled-components';
+import MenuBlock from 'components/MenuBlock';
 
 const borderStyles = css`
     ${prop => (prop.position === 'right')
@@ -60,6 +61,13 @@ const ResultContainer = styled.div`
   -ms-overflow-style: none;
   &::-webkit-scrollbar {
     display: none;
+  }
+  @media screen and (min-width: 30rem) {
+    width: 90%;
+    margin: 0 auto;
+  }
+  @media screen and (min-width: 48rem) {
+    width: 70%;
   }
 `;
 
@@ -122,6 +130,7 @@ function List() {
 
     return (
         <ListContainer>
+            <MenuBlock menu="Bookmark" />
             <Ul>
                 {menuList.map((item, index) =>
                     <Li key={index} onClick={() => onMenuClick(index)} className={item.active? 'active' : ''} position={item.position}>

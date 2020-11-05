@@ -22,10 +22,12 @@ const Dl = styled.dl`
 `;
 
 const Dt = styled.dt`
-  //font-family: 'Tajawal', sans-serif;
   display: inline-block;
   margin-right: 0.5rem;
   font-size: 0.9rem;
+  @media screen and (min-width: 30rem) {
+    font-size: 1.3rem;
+  }
   ${prop => prop.menu && css`
      font-size: 1.1rem;
   `}
@@ -41,6 +43,9 @@ const Dd = styled.dd`
   }
   &.ar {
     margin-top: 0.3rem;
+  }
+  @media screen and (min-width: 30rem) {
+    font-size: 1.1rem;
   }
 `;
 
@@ -58,6 +63,20 @@ const DeleteButton = styled.button`
   align-items: center;
   font-size: 1rem;
   color: #ffed97;
+  @media screen and (min-width: 30rem) {
+    top: 0;
+    right: 0;
+    display: none;
+    font-size: 1.5rem;
+    color: #848484;
+    transition: all 150ms ease-in-out;
+    ${Li}:hover & {
+      display: flex;
+    }
+    &:hover {
+      color: #ffed97;
+    }
+  }
 `;
 
 const SubResultBlock = styled.div`
@@ -66,6 +85,9 @@ const SubResultBlock = styled.div`
   font-size: 0.6rem;
   text-align: right;
   color: #a8a8a8;
+  @media screen and (min-width: 30rem) {
+    font-size: 0.8rem;
+  }
 `;
 
 function ListDetail({ menu, item }) {
