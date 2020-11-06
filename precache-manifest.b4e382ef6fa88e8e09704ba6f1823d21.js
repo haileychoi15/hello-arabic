@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "afda6187b51e713021963f66998a2bda",
+    "revision": "b8ccf52158c620fa80d84810d4ac2ebc",
     "url": "/hello-arabic/index.html"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/hello-arabic/static/js/2.efcdde68.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "ab10b07d39db09b3c509",
-    "url": "/hello-arabic/static/js/main.f6c2cb9d.chunk.js"
+    "revision": "d7adeaa1b42395ffec1d",
+    "url": "/hello-arabic/static/js/main.0169c982.chunk.js"
   },
   {
     "revision": "0f398efb708483b621fd",
