@@ -1,49 +1,33 @@
-import React, {useContext} from 'react';
-import {useHistory} from 'react-router-dom';
+import React, {useCallback, useContext} from 'react';
 import {UserContext} from 'Context';
 import {authService} from 'myFirebase';
 import styled from 'styled-components';
-import {FaUserSlash} from 'react-icons/fa';
-import {AiOutlineLogout} from 'react-icons/ai';
+import MenuBlock from 'components/MenuBlock';
 
 const UserContainer = styled.div`
+  position: relative;
   width: 100%;
   height: 100%;
 `;
 
 const LogoutButton = styled.button`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 40px;
-  border-bottom: 1px solid #404040;
-  padding: 0 1rem;
-  font-size: 1.2rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.8rem;
   color: #ffed97;
 `;
 
-const Text = styled.span`
-  font-size: 0.8rem;
-  color: #848484;
-`;
-
 function User() {
-    const history = useHistory();
     const setUserObj = useContext(UserContext)[1];
-
-    const onLogOutClick = () => {
+    const onLogOutClick = useCallback(() => {
         authService.signOut();
         setUserObj(null);
-        const homeURL = '/';
-        if (history.location.pathname !== homeURL) history.push(homeURL);
-    }
+    }, [setUserObj]);
     return (
         <UserContainer>
-            <LogoutButton onClick={onLogOutClick}>
-                <Text>로그아웃</Text>
-                <FaUserSlash />
-            </LogoutButton>
+            <MenuBlock menu="My Profile" />
+            <LogoutButton onClick={onLogOutClick}>로그아웃</LogoutButton>
         </UserContainer>
     );
 }

@@ -1,8 +1,9 @@
-import React, {useContext, useState} from 'react';
-import {dbService} from "myFirebase";
+import React, {useCallback, useContext, useState} from 'react';
+import {dbService} from 'myFirebase';
 import styled from 'styled-components';
 import {MdBookmarkBorder, MdBookmark} from 'react-icons/md';
 import {UserContext} from 'Context';
+import {useDecode} from 'hooks/useDecode';
 
 const Li = styled.li`
   border: 1px solid #404040;
@@ -10,6 +11,15 @@ const Li = styled.li`
   padding: 0.5rem;
   margin-bottom: 0.8rem;
   background-color: #303030;
+  @media screen and (min-width: 30rem) {
+    transition: all 150ms ease-in-out;
+    &:hover {
+      border: 1px solid #eee;
+    }
+    &:hover AddButton {
+      display: flex;
+    }
+  }
 `;
 
 const MainResultBlock = styled.div`
@@ -22,27 +32,45 @@ const Dl = styled.dl`
 `;
 
 const Dt = styled.dt`
-  //font-family: 'Tajawal', sans-serif;
   display: inline-block;
   margin-right: 0.5rem;
   font-size: 1.1rem;
+  @media screen and (min-width: 30rem) {
+    font-size: 1.3rem;
+  }
 `;
 
 const Dd = styled.dd`
   display: inline-block;
   font-size: 0.8rem;
+  @media screen and (min-width: 30rem) {
+    font-size: 1.1rem;
+  }
 `;
 
 const AddButton = styled.button`
   position: absolute;
-  top: 50%;
+  top: 0;
   right: 0;
-  transform: translateY(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: #ffed97;
+  @media screen and (min-width: 30rem) {
+    display: none;
+    font-size: 1.6rem;
+    transition: all 150ms ease-in-out;
+    color: #848484;
+    transition: all 150ms ease-in-out;
+    ${Li}:hover & {
+      display: flex;
+    }
+    &:hover {
+      color: #ffed97;
+    }
+  }
+  }
 `;
 
 const SubResultBlock = styled.div`
@@ -50,10 +78,15 @@ const SubResultBlock = styled.div`
   font-size: 0.6rem;
   line-height: 1.2rem;
   color: #a8a8a8;
+  @media screen and (min-width: 30rem) {
+    font-size: 0.8rem;
+    line-height: 1.6rem;
+  }
 `;
 
 const ArabicBlock = styled.span`
   font-size: 0.7rem;
+  line-height: 1.5rem;
 `;
 
 function ResultDetail ({ result, collectionPath }) {
@@ -61,16 +94,11 @@ function ResultDetail ({ result, collectionPath }) {
     const [add, setAdd] = useState(false);
     const [dataId, setDataId] = useState('');
     const userObj = useContext(UserContext)[0];
+    const [vocForm, root] = useDecode(result.solution.vocForm, result.solution.root);
 
-    const decodeHtml = (html) => {
-        const element = document.createElement('textarea');
-        element.innerHTML = html;
-        return element.value;
-    }
-
-    const saveResult = async () => {
+    const saveResult = useCallback(async () => {
         const date = new Date();
-        const {id} = await dbService.collection(collectionPath).add({
+        const { id } = await dbService.collection(collectionPath).add({
             creator: userObj.uid,
             vocForm: result.solution.vocForm,
             niceGloss: result.solution.niceGloss,
@@ -79,21 +107,22 @@ function ResultDetail ({ result, collectionPath }) {
             date
         });
         if (id) setDataId(id);
-    }
+    }, [userObj.uid, collectionPath, result]);
 
-    const deleteResult = async () => {
+    const deleteResult = useCallback( async () => {
         await dbService.doc(`${collectionPath}/${dataId}`).delete();
-    }
+    }, [dataId, collectionPath]);
 
-    const onAddClick = () => {
+    const onAddClick = useCallback(() => {
         add ? deleteResult() : saveResult();
         setAdd(prev => !prev);
-    }
+    }, [add, deleteResult, saveResult]);
+
     return (
         <Li>
             <MainResultBlock>
                 <Dl open={open} onClick={() => setOpen(prev => !prev)}>
-                    <Dt>{decodeHtml(result.solution.vocForm)}</Dt>
+                    <Dt>{vocForm}</Dt>
                     <Dd>{result.solution.niceGloss}</Dd>
                 </Dl>
                 <AddButton onClick={onAddClick}>
@@ -103,7 +132,7 @@ function ResultDetail ({ result, collectionPath }) {
             <div>
                 <SubResultBlock>
                     <span>{result.solution.posNice}</span>
-                    <span>, Root <ArabicBlock>{decodeHtml(result.solution.root)}</ArabicBlock></span>
+                    <span>, Root <ArabicBlock>{root}</ArabicBlock></span>
                 </SubResultBlock>
             </div>
         </Li>

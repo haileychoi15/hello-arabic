@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
-import Result from "components/Result";
+import React, {useCallback, useState} from 'react';
+import Result from 'components/Result';
 import {getWordResult} from "services/API";
 import styled, {css} from 'styled-components';
+import MenuBlock from 'components/MenuBlock';
 import {AiOutlineCloseCircle, AiOutlineSearch} from 'react-icons/ai';
 
 const borderStyles = css`
@@ -52,7 +53,7 @@ const Li = styled.li`
 
 const Form = styled.form`
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
 `;
@@ -64,18 +65,31 @@ const InputContainer = styled.div`
     align-items: center;
     width: 100%;
     height: 45px;
-    border: 1px solid #848484;
-    border-radius: 22px;
-    padding: 0.3rem 0.7rem;
+    border: none;
     margin-bottom: 1rem;
+    @media screen and (min-width: 30rem) {
+      width: 375px;
+      margin: 0 auto 2rem;
+  }
 `;
 
 const Input = styled.input`
-  flex-basis: 90%;
-  height: 100%;
+  width: 100%;
+  height: 45px;
+  border: 1px solid #848484;
+  border-radius: 22px;
+  padding: 0.3rem 2rem 0.3rem 1rem;
   font-size: 1.1rem;
   color: #d2d2d2;
   caret-color: #848484;
+  &:active,
+  &:focus {
+    border: 1px solid #ffed97;
+  }
+  @media screen and (min-width: 30rem) {
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    font-size: 1.2rem;
+  }
 `;
 
 const ResetButton = styled.button`
@@ -93,7 +107,7 @@ const ResetButton = styled.button`
 const Placeholder = styled.div`
   position: absolute;
   top: 50%;
-  left: 0.7rem;
+  left: 1rem;
   display: flex;
   align-items: center;
   font-size: 1.1rem;
@@ -107,16 +121,6 @@ const PlaceholderText = styled.span`
   font-weight: 400;
 `;
 
-const SearchButton = styled.button`
-  width: 100%;
-  height: 40px;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ffed97;
-  border-radius: 20px;
-  color: #ffed97;
-`;
-
 const ResultContainer = styled.div`
    width: 100%;
    flex-grow: 1;
@@ -124,6 +128,13 @@ const ResultContainer = styled.div`
    -ms-overflow-style: none;
   &::-webkit-scrollbar {
     display: none;
+  }
+  @media screen and (min-width: 30rem) {
+    width: 90%;
+    margin: 0 auto;
+  }
+  @media screen and (min-width: 48rem) {
+    width: 70%;
   }
 `;
 
@@ -135,6 +146,7 @@ const MessageBlock = styled.div`
 `;
 
 function Home({ collectionPath }) {
+
     const initialLangList = [
         {
             text : '아랍어',
@@ -148,17 +160,12 @@ function Home({ collectionPath }) {
         }
     ]
     const [langList, setLangList] = useState(initialLangList);
-    const [inputValue, setInputValue] = useState('');
     const [lang, setLang] = useState(true); // arabic
+    const [inputValue, setInputValue] = useState('');
     const [results, setResults] = useState(null);
     const [message, setMessage] = useState('');
 
-    const onChange = (e) => {
-        const { value } = e.target;
-        setInputValue(value);
-    }
-
-    const onSubmit = async (e) => {
+    const onSubmit = useCallback(async (e) => {
         e.preventDefault();
         setResults(null);
 
@@ -166,21 +173,25 @@ function Home({ collectionPath }) {
         setMessage( hasVal ? '결과를 가져오는 중...' : '단어를 입력해주세요.');
         if (!hasVal) return false;
 
-        const test1 = 'زَهْرَة';
-        const test2 = 'تمشى';
-        const result = await getWordResult(test1, lang);
+        const result = await getWordResult(inputValue, lang);
         result.length ? setResults(result) : setMessage('검색결과가 없습니다.');
-    }
+    }, [inputValue, lang]);
 
-    const onLangClick = (index) => {
+    const onChange = useCallback(e => {
+        const { value } = e.target;
+        setInputValue(value);
+    }, []);
+
+    const onLangClick = useCallback((index) => {
         (index === 0) ? setLang(true) : setLang(false);
         setLangList(langList.map((item, i) => (index === i)
         ? {...item, active: true}
         : {...item, active: false}));
-    }
+    }, [langList]);
 
     return (
         <HomeContainer>
+            <MenuBlock menu="Word Search" />
             <Ul>
                 {langList.map((item, index) =>
                     <Li key={index} onClick={() => onLangClick(index)} className={item.active? 'active' : ''} position={item.position}>
@@ -192,10 +203,10 @@ function Home({ collectionPath }) {
                 <InputContainer>
                     <Input
                         type="text"
-                        lang="ar"
-                        maxLength={30}
+                        lang={lang ? 'ar' : 'en'}
                         value={inputValue}
-                        onChange={onChange} />
+                        onChange={onChange}
+                    />
                     {Boolean(inputValue.length)
                         ? <ResetButton type="button" onClick={() => setInputValue('')}>
                             <AiOutlineCloseCircle />
@@ -206,16 +217,13 @@ function Home({ collectionPath }) {
                           </Placeholder>
                     }
                 </InputContainer>
-                {/*<SearchButton type="submit">
-                    검색
-                </SearchButton>*/}
             </Form>
             <ResultContainer>
-                <div>
+                <>
                    {results ? <Result results={results} collectionPath={collectionPath} />
                        : <MessageBlock>{message}</MessageBlock>
                    }
-                </div>
+                </>
             </ResultContainer>
         </HomeContainer>
     );

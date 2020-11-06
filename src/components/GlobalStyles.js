@@ -13,7 +13,7 @@ body {
   body * {
     box-sizing: border-box;
     &::selection {
-      background-color: rgba(79,192,141,0.5);
+      background-color: rgba(255, 237, 151, 0.5);
     }
   }
   
@@ -34,6 +34,7 @@ body {
   }
   
   button, input, textarea, select, option {
+    font-family: 'Nanum Gothic', sans-serif; 
     padding: 0;
     border: none;
     cursor: pointer;

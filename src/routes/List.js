@@ -1,8 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import ListDetail from 'components/ListDetail';
 import {UserContext} from 'Context';
 import {dbService} from 'myFirebase';
 import styled, {css} from 'styled-components';
+import MenuBlock from 'components/MenuBlock';
 
 const borderStyles = css`
     ${prop => (prop.position === 'right')
@@ -61,6 +62,13 @@ const ResultContainer = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+  @media screen and (min-width: 30rem) {
+    width: 90%;
+    margin: 0 auto;
+  }
+  @media screen and (min-width: 48rem) {
+    width: 70%;
+  }
 `;
 
 const Message = styled.span`
@@ -73,7 +81,7 @@ const Message = styled.span`
   transform: translate(-50%, -50%);
 `;
 
-function List({ collectionPath }) {
+function List() {
     const initialMenuList = [
         {
             text : '단어',
@@ -95,30 +103,34 @@ function List({ collectionPath }) {
 
     useEffect(() => {
         getDataList('words');
-    },[collectionPath]);
+    });
 
-    const getDataList = (category) => {
+    const getDataList = useCallback((category) => {
         dbService.collection(category).orderBy('date', 'desc').onSnapshot(snapshot => {
-            const results = snapshot.docs.map(doc => ({
+            const results = snapshot.docs
+                .filter(doc => doc.data().creator === userObj.uid)
+                .map(doc => ({
                 id: doc.id,
-                ...doc.data()
+                ...doc.data(),
+                date: doc.data().date.toDate()
             }));
-            (results.length) ? setEmpty(false) : setEmpty(true);
+            (results.length === 0) ? setEmpty(true) : setEmpty(false);
             (category === 'words') ? setWords(results) : setTranslations(results);
         });
-    }
+    }, [userObj.uid]);
 
-    const onMenuClick = (index) => {
+    const onMenuClick = useCallback((index) => {
         const wordList = (index === 0);
         getDataList(wordList ? 'words' : 'translations');
         wordList ? setMenu(true) : setMenu(false);
         setMenuList(menuList.map((item, i) => (index === i)
             ? {...item, active: true}
             : {...item, active: false}));
-    }
+    }, [menuList, getDataList]);
 
     return (
-        <ListContainer empty={empty}>
+        <ListContainer>
+            <MenuBlock menu="Bookmark" />
             <Ul>
                 {menuList.map((item, index) =>
                     <Li key={index} onClick={() => onMenuClick(index)} className={item.active? 'active' : ''} position={item.position}>
@@ -132,18 +144,14 @@ function List({ collectionPath }) {
                     : <>
                         {menu
                             ? <ul>
-                                {words
-                                    .filter(word => word.creator === userObj.uid)
-                                    .map(word => <ListDetail
+                                {words.map(word => <ListDetail
                                         key={word.id}
                                         menu={menu}
                                         item={word}
                                     /> )}
                               </ul>
                             : <ul>
-                                {translations
-                                    .filter(transaction => transaction.creator === userObj.uid)
-                                    .map(transaction => <ListDetail
+                                {translations.map(transaction => <ListDetail
                                         key={transaction.id}
                                         menu={menu}
                                         item={transaction}

@@ -1,16 +1,26 @@
-import React, {useContext, useState} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import styled from 'styled-components';
-import {dbService} from "myFirebase";
+import {dbService} from 'myFirebase';
 import {googleTranslate} from 'services/API';
 import {MdSwapHoriz} from 'react-icons/md'
 import {MdBookmarkBorder, MdBookmark} from 'react-icons/md';
 import {UserContext} from 'Context';
+import MenuBlock from 'components/MenuBlock';
+import {AiOutlineCloseCircle} from "react-icons/ai";
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @media screen and (min-width: 30rem) {
+    width: 70%;
+    margin: 0 auto;
+  }
+  @media screen and (min-width: 30rem) {
+    width: 40%;
+    min-width: 400px;
+  }
 `;
 
 const LangContainer = styled.div`
@@ -49,19 +59,14 @@ const SwitchButton = styled.button`
 `;
 
 const TextareaBlock = styled.div`
+  position: relative;
   width: 100%;
   border: 1px solid #404040;
   border-radius: 8px;
-  padding: 0.5rem;
+  padding: 0.5rem 1.5rem 0.5rem 0.5rem;  
   margin-bottom: 1rem;
-  color: #333;
-  background-color: #ffed97;
-  &.result-textarea {
-    background-color: #303030;
-  }
-  &.result-textarea textarea {
-    color: #eee;
-  }
+  color: #eee;
+  background-color: #303030;
 `;
 
 const Textarea = styled.textarea`
@@ -71,10 +76,26 @@ const Textarea = styled.textarea`
   padding: 0;
   font-size: 1.1rem;
   background: none;
+  color: #eee;
   resize: none;
+  &::placeholder {
+    font-size: 0.9rem;
+  }
 `;
 
-const SearchButton = styled.button`
+const ResetButton = styled.button`
+  position: absolute;
+  top: 1rem;
+  right: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #848484;
+  font-size: 1.2rem;
+  transform: translateY(-50%);
+`;
+
+const SubmitButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -84,60 +105,59 @@ const SearchButton = styled.button`
   margin-bottom: 1rem;
   color: #333;
   background: #ffed97;
-`;
-
-const AddButtonBlock = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  font-size: 0.8rem;
-  color: #eee;
+  @media screen and (min-width: 30rem) {
+    width: 100px;
+    margin: 0 0 5rem auto;
+  }
 `;
 
 const AddButton = styled.button`
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 35px;
-  height: 35px;
-  border: 1px solid #ffed97;
-  border-radius: 50%;
   font-size: 1.2rem;
   color: #ffed97;
+  @media screen and (min-width: 30rem) {
+    font-size: 1.6rem;
+    color: #848484;
+    transition: all 150ms ease-in-out;
+    &:hover {
+      color: #ffed97;
+    }
 `;
 
-const Message = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+const MessageBlock = styled.div`
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
 `;
 
-function Translate() {
-    const collectionPath = 'translations';
+function Translate({ collectionPath }) {
     const userObj = useContext(UserContext)[0];
-    const [value, setValue] = useState('');
-    const [results, setResults] = useState('helloooooo');
+    const [inputValue, setInputValue] = useState('');
+    const [results, setResults] = useState('');
     const [add, setAdd] = useState(false);
     const [dataId, setDataId] = useState('');
     const [sourceLang, setSourceLang] = useState('ar');
     const [targetLang, setTargetLang] = useState('en');
     const [message, setMessage] = useState('');
 
-    const onInputChange = (e) => {
+    const onInputChange = useCallback((e) => {
         const { value } = e.target;
-        setValue(value);
+        setInputValue(value);
         setMessage('');
-    }
+    }, []);
 
-    const onLangSwitch = () => {
+    const onLangSwitch = useCallback(() => {
         const tempLang = sourceLang;
         setSourceLang(targetLang);
         setTargetLang(tempLang);
-    }
+    }, [sourceLang, targetLang]);
 
-    const onLangChange = (e) => {
+    const onLangChange = useCallback((e) => {
         const { name, value } = e.target;
         if (name === 'source-langs') {
             setSourceLang(value);
@@ -145,50 +165,46 @@ function Translate() {
         else if (name === 'target-langs') {
             setTargetLang(value);
         }
-    }
+    }, []);
 
-    const onSubmit = async (e) => {
+    const onSubmit = useCallback(async (e) => {
         e.preventDefault();
         setAdd(false);
-        setResults('');
-        const text = 'مَاذَا أَعْجَبكُمْ فِي بَلَدِنَا؟';
-        //const result = await googleTranslate(text, sourceLang, targetLang);
-        //setResults(result);
-    }
 
-    const saveResult = async () => {
+        const hasVal = inputValue.length;
+        setResults('');
+        setMessage( hasVal ? '결과를 가져오는 중...' : '내용을 입력해주세요.');
+        if (!hasVal) return false;
+
+        const result = await googleTranslate(inputValue, sourceLang, targetLang);
+        result.length ? setResults(result) : setMessage('검색결과가 없습니다.');
+    }, [inputValue, sourceLang, targetLang]);
+
+    const saveResult = useCallback(async () => {
         const date = new Date();
         const { id } = await dbService.collection(collectionPath).add({
             creator: userObj.uid,
             sourceLang,
             targetLang,
-            sourceValue: value,
+            sourceValue: inputValue,
             targetValue: results,
             date
         });
         setDataId(id);
-    }
+    }, [collectionPath, userObj.uid, sourceLang, targetLang, inputValue, results]);
 
-    const deleteResult = async () => {
+    const deleteResult = useCallback(async () => {
         await dbService.doc(`${collectionPath}/${dataId}`).delete();
-    }
+    }, [collectionPath, dataId]);
 
-    const onAddClick = () => {
-
-        if (!value.length) {
-            setMessage('번역할 문장을 입력하세요.');
-            return false;
-        }
-        else if (!results.length) {
-            setMessage('번역 결과가 없습니다.');
-            return false;
-        }
-
+    const onAddClick = useCallback(() => {
         add ? deleteResult() : saveResult();
         setAdd(prev => !prev);
-    }
+    }, [add, deleteResult, saveResult]);
+
     return (
-        <div>
+        <>
+            <MenuBlock menu="Translate" />
             <Form action="" onSubmit={onSubmit}>
                 <LangContainer>
                     <SelectBlock>
@@ -198,7 +214,7 @@ function Translate() {
                             <option value="ko">한국어</option>
                         </Select>
                     </SelectBlock>
-                    <SwitchButton onClick={onLangSwitch}>
+                    <SwitchButton type="button" onClick={onLangSwitch}>
                         <MdSwapHoriz />
                     </SwitchButton>
                     <SelectBlock>
@@ -210,20 +226,27 @@ function Translate() {
                     </SelectBlock>
                 </LangContainer>
                 <TextareaBlock>
-                    <Textarea id="source-context" rows="8" placeholder="내용을 입력해주세요." value={value} onChange={onInputChange} />
+                    <Textarea id="source-context" rows="6" placeholder="내용을 입력해주세요." value={inputValue} onChange={onInputChange} />
+                    {Boolean(inputValue.length) &&
+                        <ResetButton type="button" onClick={() => setInputValue('')}>
+                            <AiOutlineCloseCircle />
+                        </ResetButton>
+                    }
                 </TextareaBlock>
-                {/*<SearchButton type="submit">번역하기</SearchButton>*/}
-                <TextareaBlock className="result-textarea" >
-                    <Textarea id="target-context" rows="8" placeholder="번역 결과입니다." value={results} readOnly />
-                </TextareaBlock>
+                <SubmitButton type="submit">번역하기</SubmitButton>
+                {Boolean(results.length)
+                    ? <>
+                        <TextareaBlock>
+                            <Textarea id="target-context" rows="6" placeholder="번역 결과입니다." value={results} readOnly />
+                            <AddButton type="button" onClick={onAddClick}>
+                                {add ? <MdBookmark /> : <MdBookmarkBorder />}
+                            </AddButton>
+                        </TextareaBlock>
+                    </>
+                    : <MessageBlock>{message}</MessageBlock>
+                }
             </Form>
-            <AddButtonBlock>
-                <Message>{message}</Message>
-                <AddButton type="button" onClick={onAddClick}>
-                    {add ? <MdBookmark /> : <MdBookmarkBorder />}
-                </AddButton>
-            </AddButtonBlock>
-        </div>
+        </>
     );
 }
 
