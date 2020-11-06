@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useCallback, useContext} from 'react';
 import {UserContext} from 'Context';
 import {authService} from 'myFirebase';
 import styled from 'styled-components';
@@ -20,11 +20,10 @@ const LogoutButton = styled.button`
 
 function User() {
     const setUserObj = useContext(UserContext)[1];
-
-    const onLogOutClick = () => {
+    const onLogOutClick = useCallback(() => {
         authService.signOut();
         setUserObj(null);
-    }
+    }, [setUserObj]);
     return (
         <UserContainer>
             <MenuBlock menu="My Profile" />

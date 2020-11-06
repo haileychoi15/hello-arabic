@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import Result from 'components/Result';
 import {getWordResult} from "services/API";
 import styled, {css} from 'styled-components';
@@ -146,6 +146,7 @@ const MessageBlock = styled.div`
 `;
 
 function Home({ collectionPath }) {
+
     const initialLangList = [
         {
             text : '아랍어',
@@ -159,17 +160,12 @@ function Home({ collectionPath }) {
         }
     ]
     const [langList, setLangList] = useState(initialLangList);
-    const [inputValue, setInputValue] = useState('');
     const [lang, setLang] = useState(true); // arabic
+    const [inputValue, setInputValue] = useState('');
     const [results, setResults] = useState(null);
     const [message, setMessage] = useState('');
 
-    const onChange = (e) => {
-        const { value } = e.target;
-        setInputValue(value);
-    }
-
-    const onSubmit = async (e) => {
+    const onSubmit = useCallback(async (e) => {
         e.preventDefault();
         setResults(null);
 
@@ -179,14 +175,19 @@ function Home({ collectionPath }) {
 
         const result = await getWordResult(inputValue, lang);
         result.length ? setResults(result) : setMessage('검색결과가 없습니다.');
-    }
+    }, [inputValue, lang]);
 
-    const onLangClick = (index) => {
+    const onChange = useCallback(e => {
+        const { value } = e.target;
+        setInputValue(value);
+    }, []);
+
+    const onLangClick = useCallback((index) => {
         (index === 0) ? setLang(true) : setLang(false);
         setLangList(langList.map((item, i) => (index === i)
         ? {...item, active: true}
         : {...item, active: false}));
-    }
+    }, [langList]);
 
     return (
         <HomeContainer>
@@ -202,10 +203,10 @@ function Home({ collectionPath }) {
                 <InputContainer>
                     <Input
                         type="text"
-                        lang="ar"
-                        maxLength={30}
+                        lang={lang ? 'ar' : 'en'}
                         value={inputValue}
-                        onChange={onChange} />
+                        onChange={onChange}
+                    />
                     {Boolean(inputValue.length)
                         ? <ResetButton type="button" onClick={() => setInputValue('')}>
                             <AiOutlineCloseCircle />

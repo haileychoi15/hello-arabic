@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import styled from 'styled-components';
 import {dbService} from 'myFirebase';
 import {googleTranslate} from 'services/API';
@@ -145,19 +145,19 @@ function Translate({ collectionPath }) {
     const [targetLang, setTargetLang] = useState('en');
     const [message, setMessage] = useState('');
 
-    const onInputChange = (e) => {
+    const onInputChange = useCallback((e) => {
         const { value } = e.target;
         setInputValue(value);
         setMessage('');
-    }
+    }, []);
 
-    const onLangSwitch = () => {
+    const onLangSwitch = useCallback(() => {
         const tempLang = sourceLang;
         setSourceLang(targetLang);
         setTargetLang(tempLang);
-    }
+    }, [sourceLang, targetLang]);
 
-    const onLangChange = (e) => {
+    const onLangChange = useCallback((e) => {
         const { name, value } = e.target;
         if (name === 'source-langs') {
             setSourceLang(value);
@@ -165,9 +165,9 @@ function Translate({ collectionPath }) {
         else if (name === 'target-langs') {
             setTargetLang(value);
         }
-    }
+    }, []);
 
-    const onSubmit = async (e) => {
+    const onSubmit = useCallback(async (e) => {
         e.preventDefault();
         setAdd(false);
 
@@ -178,9 +178,9 @@ function Translate({ collectionPath }) {
 
         const result = await googleTranslate(inputValue, sourceLang, targetLang);
         result.length ? setResults(result) : setMessage('검색결과가 없습니다.');
-    }
+    }, [inputValue, sourceLang, targetLang]);
 
-    const saveResult = async () => {
+    const saveResult = useCallback(async () => {
         const date = new Date();
         const { id } = await dbService.collection(collectionPath).add({
             creator: userObj.uid,
@@ -191,16 +191,17 @@ function Translate({ collectionPath }) {
             date
         });
         setDataId(id);
-    }
+    }, [collectionPath, userObj.uid, sourceLang, targetLang, inputValue, results]);
 
-    const deleteResult = async () => {
+    const deleteResult = useCallback(async () => {
         await dbService.doc(`${collectionPath}/${dataId}`).delete();
-    }
+    }, [collectionPath, dataId]);
 
-    const onAddClick = () => {
+    const onAddClick = useCallback(() => {
         add ? deleteResult() : saveResult();
         setAdd(prev => !prev);
-    }
+    }, [add, deleteResult, saveResult]);
+
     return (
         <>
             <MenuBlock menu="Translate" />

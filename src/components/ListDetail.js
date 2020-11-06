@@ -1,7 +1,9 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {dbService} from 'myFirebase';
 import {MdDeleteForever} from 'react-icons/md';
 import styled, {css} from 'styled-components';
+import {useDecode} from 'hooks/useDecode';
+import {useDate} from 'hooks/useDate';
 
 const Li = styled.li`
   border: 1px solid #404040;
@@ -26,10 +28,10 @@ const Dt = styled.dt`
   margin-right: 0.5rem;
   font-size: 0.9rem;
   @media screen and (min-width: 30rem) {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
   }
   ${prop => prop.menu && css`
-     font-size: 1.1rem;
+     font-size: 1.3rem;
   `}
 `;
 
@@ -91,45 +93,39 @@ const SubResultBlock = styled.div`
 `;
 
 function ListDetail({ menu, item }) {
-    const day = item.date.toLocaleDateString().replaceAll('.', '').replaceAll(' ', '.');
-    const [hours, minutes] = item.date.toLocaleTimeString().split(':');
-    const date = `${day} ${hours}:${minutes}`;
     const [open, setOpen] = useState(false);
-    const decodeHtml = (html) => {
-        const element = document.createElement('textarea');
-        element.innerHTML = html;
-        return element.value;
-    }
-    const onDeleteClick = async () => {
+    const [vocForm, root, sourceValue, targetValue] = useDecode(item.vocForm, item.root, item.sourceValue, item.targetValue);
+    const date = useDate(item.date);
+    const onDeleteClick = useCallback(async () => {
         const collectionPath = menu ? 'words' : 'translations';
         await dbService.doc(`${collectionPath}/${item.id}`).delete();
-    }
+    }, [menu, item.id]);
     return (
         <Li>
             <MainResultBlock>
                 <Dl open={open} onClick={() => setOpen(prev => !prev)}>
                     {menu
                         ? <>
-                            <Dt menu={menu}>{decodeHtml(item.vocForm)}</Dt>
+                            <Dt menu={menu}>{vocForm}</Dt>
                             <Dd>{item.niceGloss}</Dd>
                             {open &&
                                 <>
                                     <Dd className="open">{item.posNice}</Dd>
                                     <Dd className="open">Root
-                                        <ArabicBlock>{decodeHtml(item.root)}</ArabicBlock>
+                                        <ArabicBlock>{root}</ArabicBlock>
                                     </Dd>
                                 </>
                             }
                           </>
                         : <>
                             {item.sourceLang === 'ar'
-                                ? <Dt menu={menu}>{decodeHtml(item.sourceValue)}</Dt>
+                                ? <Dt menu={menu}>{sourceValue}</Dt>
                                 : <Dt menu={menu}>{item.sourceValue}</Dt>
                             }
                             {open &&
                                 <>
                                 {item.targetLang === 'ar'
-                                        ? <Dd className="open ar">{decodeHtml(item.targetValue)}</Dd>
+                                        ? <Dd className="open ar">{targetValue}</Dd>
                                         : <Dd className="open">{item.targetValue}</Dd>
                                 }
                                 </>

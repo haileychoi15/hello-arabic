@@ -1,8 +1,9 @@
-import React, {useContext, useState} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import {dbService} from 'myFirebase';
 import styled from 'styled-components';
 import {MdBookmarkBorder, MdBookmark} from 'react-icons/md';
 import {UserContext} from 'Context';
+import {useDecode} from 'hooks/useDecode';
 
 const Li = styled.li`
   border: 1px solid #404040;
@@ -93,16 +94,11 @@ function ResultDetail ({ result, collectionPath }) {
     const [add, setAdd] = useState(false);
     const [dataId, setDataId] = useState('');
     const userObj = useContext(UserContext)[0];
+    const [vocForm, root] = useDecode(result.solution.vocForm, result.solution.root);
 
-    const decodeHtml = (html) => {
-        const element = document.createElement('textarea');
-        element.innerHTML = html;
-        return element.value;
-    }
-
-    const saveResult = async () => {
+    const saveResult = useCallback(async () => {
         const date = new Date();
-        const {id} = await dbService.collection(collectionPath).add({
+        const { id } = await dbService.collection(collectionPath).add({
             creator: userObj.uid,
             vocForm: result.solution.vocForm,
             niceGloss: result.solution.niceGloss,
@@ -111,21 +107,22 @@ function ResultDetail ({ result, collectionPath }) {
             date
         });
         if (id) setDataId(id);
-    }
+    }, [userObj.uid, collectionPath, result]);
 
-    const deleteResult = async () => {
+    const deleteResult = useCallback( async () => {
         await dbService.doc(`${collectionPath}/${dataId}`).delete();
-    }
+    }, [dataId, collectionPath]);
 
-    const onAddClick = () => {
+    const onAddClick = useCallback(() => {
         add ? deleteResult() : saveResult();
         setAdd(prev => !prev);
-    }
+    }, [add, deleteResult, saveResult]);
+
     return (
         <Li>
             <MainResultBlock>
                 <Dl open={open} onClick={() => setOpen(prev => !prev)}>
-                    <Dt>{decodeHtml(result.solution.vocForm)}</Dt>
+                    <Dt>{vocForm}</Dt>
                     <Dd>{result.solution.niceGloss}</Dd>
                 </Dl>
                 <AddButton onClick={onAddClick}>
@@ -135,7 +132,7 @@ function ResultDetail ({ result, collectionPath }) {
             <div>
                 <SubResultBlock>
                     <span>{result.solution.posNice}</span>
-                    <span>, Root <ArabicBlock>{decodeHtml(result.solution.root)}</ArabicBlock></span>
+                    <span>, Root <ArabicBlock>{root}</ArabicBlock></span>
                 </SubResultBlock>
             </div>
         </Li>

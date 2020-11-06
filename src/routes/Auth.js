@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import { firebaseInstance, authService } from 'myFirebase';
 import styled from 'styled-components';
 import {ImEyeBlocked, ImEye} from 'react-icons/im';
@@ -109,13 +109,14 @@ function Auth() {
     const [message, setMessage] = useState('');
     const [passwordType, setPasswordType] = useState(true);
 
-    const onChange = (e) => {
+    const onChange = useCallback((e) => {
         setMessage('');
         const {name, value} = e.target;
         if (name === 'email') setEmail(value);
         else if (name === 'password') setPassword(value);
-    }
-    const onSubmit = async (e) => {
+    }, []);
+
+    const onSubmit = useCallback(async (e) => {
         e.preventDefault();
         try {
             if (newAccount) {
@@ -126,21 +127,20 @@ function Auth() {
         } catch (error) {
             setMessage(error.message);
         }
-    }
+    }, [newAccount, email, password]);
 
-    const toggleAccount = () => {
+    const toggleAccount = useCallback(() => {
         setNewAccount(prev => !prev);
         setEmail('');
         setPassword('');
         setPasswordType(true);
         setMessage('');
-    };
+    }, []);
 
-    const onSocialClick = async () => {
+    const onSocialClick = useCallback(async () => {
         const provider = new firebaseInstance.auth.GoogleAuthProvider();
         await authService.signInWithPopup(provider);
-        //console.log(data.additionalUserInfo.profile.email);
-    }
+    }, []);
 
 
     return (

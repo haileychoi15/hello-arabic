@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import ListDetail from 'components/ListDetail';
 import {UserContext} from 'Context';
 import {dbService} from 'myFirebase';
@@ -103,9 +103,9 @@ function List() {
 
     useEffect(() => {
         getDataList('words');
-    },[]);
+    });
 
-    const getDataList = (category) => {
+    const getDataList = useCallback((category) => {
         dbService.collection(category).orderBy('date', 'desc').onSnapshot(snapshot => {
             const results = snapshot.docs
                 .filter(doc => doc.data().creator === userObj.uid)
@@ -117,16 +117,16 @@ function List() {
             (results.length === 0) ? setEmpty(true) : setEmpty(false);
             (category === 'words') ? setWords(results) : setTranslations(results);
         });
-    }
+    }, [userObj.uid]);
 
-    const onMenuClick = (index) => {
+    const onMenuClick = useCallback((index) => {
         const wordList = (index === 0);
         getDataList(wordList ? 'words' : 'translations');
         wordList ? setMenu(true) : setMenu(false);
         setMenuList(menuList.map((item, i) => (index === i)
             ? {...item, active: true}
             : {...item, active: false}));
-    }
+    }, [menuList, getDataList]);
 
     return (
         <ListContainer>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import NavItem from 'components/NavItem';
 import styled from 'styled-components';
 
@@ -60,19 +60,15 @@ const Navigation = () => {
         size: '2rem',
     }];
     const [list, setList] = useState(data);
-
-    const onNavClick = (id, title) => {
-
-        // 리팩토링 필요...
+    const onNavClick = useCallback((id, title) => {
         const apps = document.querySelectorAll('.app');
         apps.forEach(app => {
             app.classList.contains(title) ?  app.classList.add('show') :  app.classList.remove('show');
         });
-
         setList(list.map((item, index) =>  (id === item.id)
             ? {...item, active: true}
             : {...item, active: false}));
-    }
+    }, [list]);
 
     return (
         <div>
